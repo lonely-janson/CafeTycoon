@@ -2,6 +2,8 @@
 #define __PERFORM_HPP__
 
 #include "user.hpp"
+
+#include "page.hpp"
 #include <string>
 #include <vector>
 
@@ -23,7 +25,7 @@ void *showTime(void *);
 
 struct __MSG {
     long type;
-    int data[2]; // 0 : 돈 , 1 : 판매잔수
+    int data[3]; // 0 : 돈 , 1 : 판매잔수, 2 : 경험치
 };
 typedef struct __MSG Msg;
 
@@ -54,8 +56,10 @@ class Game {
           caramelDrizzle = 5000
       };*/
 
+    Page page;
+
   public:
-    // Game();
+    Game() { page = Page(); }
     void start(User &user);
 };
 

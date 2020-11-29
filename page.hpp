@@ -2,6 +2,7 @@
 #define __PAGE_HPP__
 
 #include "console.hpp"
+#include <map>
 #include <stdlib.h>
 #define WIDTH 65
 #define HEIGHT 25
@@ -18,7 +19,7 @@ class Page {
     // void signUp();
     void mainPage();
     void workingPage1();
-    void makingDrink();
+    void makingDrink(map<int, int> orderd); // orderd : 주문 정보
     void workingPage2();
     void workingPage3();
     void workingPage4();

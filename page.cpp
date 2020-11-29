@@ -1,4 +1,6 @@
 #include "page.hpp"
+#include <string>
+#include <vector>
 
 void Page::clear() { system("clear"); }
 
@@ -445,12 +447,27 @@ void Page::workingPage1() {
     Console::gotoEnd();
 }
 
-void Page::makingDrink() {
+void Page::makingDrink(map<int, int> orderd) {
     frame();
+    vector<string> coffeeName = {"아메리카노", "카페라뗴",   "홍차",
+                                 "카페모카",   "레몬에이드", "카라멜마끼아또"};
+    map<int, int>::iterator iter;
+    int i;
 
     Console::gotoXY(4, 3);
     Console::setBackground(LIGHTGRAY);
     Console::printColorString("총 주문 음료 : ", MAGENTA);
+
+    for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
+        string temp =
+            coffeeName[iter->first] + " " + to_string(iter->second) + "잔 ";
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(temp.c_str(), MAGENTA);
+        if (i % 2 == 1) {
+            Console::gotoXY(18, Console::y + 1);
+        }
+    }
+
     Console::gotoXY(4, 5);
     Console::setBackground(LIGHTGRAY);
     Console::printColorString("현재 제조 중인 음료 : ", MAGENTA);

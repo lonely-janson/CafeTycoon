@@ -18,11 +18,15 @@ int main() {
     // page.makingDrink();
     // page.workingPage2();
     // page.workingPage3();
-    page.workingPage4();
+    // page.workingPage4();
 
     // Data data;
 
     // data.signUp();
     // data.signIn();
+
+    User user("SON");
+    Game game;
+    game.start(user);
     return 0;
 }

@@ -32,10 +32,9 @@ using namespace std;
 
 class Console {
   private:
+  public:
     static int x;
     static int y;
-
-  public:
     static int linux_getch(void);
     static int getX() { return x; }   // 현제 x 좌표
     static int getY() { return y; }   // 현제 y 좌표
