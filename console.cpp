@@ -28,10 +28,10 @@ const char *Console::input(int mode, int maxsize) {
 
     while (1) {
         ch[index] = Console::linux_getch();
-        if (ch[index] == 127) {
+        if (ch[index] == BACK) {
             cout << "\b \b";
             index--;
-        } else if (ch[index] == 10) {
+        } else if (ch[index] == ENTER) {
             cout << ch[index];
             break;
         } else if (index < maxsize) {

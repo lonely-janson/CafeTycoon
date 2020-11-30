@@ -4,6 +4,13 @@
 #include <stdio.h>
 #include <string>
 
+#define BACK 127
+#define ENTER 10
+#define UP 279165
+#define DOWN 279166
+#define RIGHT 279167
+#define LEFT 279168
+
 // 색상
 #define BLACK 30
 #define RED 31
@@ -27,9 +34,9 @@ class Console {
   private:
     static int x;
     static int y;
-    static int linux_getch(void);
 
   public:
+    static int linux_getch(void);
     static int getX() { return x; }   // 현제 x 좌표
     static int getY() { return y; }   // 현제 y 좌표
     static void gotoXY(int x, int y); // x,y 좌표 변경
