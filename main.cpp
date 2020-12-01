@@ -12,10 +12,10 @@ int main() {
     // page.frame();
     // page.startPage();
     // page.login();
-    // page.signUp();
+    page.signUp();
     // page.mainPage();
     // page.workingPage1_day();
-    page.makingDrink();
+    // page.makingDrink();
     // page.workingPage2_day();
     // page.workingPage3_day();
     // page.workingPage4_day();
@@ -25,7 +25,7 @@ int main() {
     // page.workingPage4_night();
     // page.myInfo();
     // page.store();
-    page.showTimer();
+    // page.showTimer();
 
     // Data data;
 

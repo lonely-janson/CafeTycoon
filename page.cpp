@@ -142,10 +142,10 @@ void Page::login() {
 
     // i
     for (int i = 8; i < 12; i++)
-        Console::printDot(14, i, LIGHTBLUE);
-    for (int i = 12; i < 17; i++)
+        Console::printDot(16, i, LIGHTBLUE);
+    for (int i = 15; i < 18; i++)
         Console::printDot(i, 8, LIGHTBLUE);
-    for (int i = 12; i < 17; i++)
+    for (int i = 15; i < 18; i++)
         Console::printDot(i, 11, LIGHTBLUE);
     // d
     for (int i = 8; i < 12; i++)
@@ -159,24 +159,21 @@ void Page::login() {
 
     // p
     for (int i = 14; i < 18; i++)
-        Console::printDot(12, i, LIGHTBLUE);
-    Console::printDot(13, 14, LIGHTBLUE);
-    Console::printDot(14, 14, LIGHTBLUE);
-    Console::printDot(15, 15, LIGHTBLUE);
-    Console::printDot(14, 16, LIGHTBLUE);
-    Console::printDot(13, 16, LIGHTBLUE);
-    // w
+        Console::printDot(15, i, LIGHTBLUE);
+    Console::printDot(16, 14, LIGHTBLUE);
     Console::printDot(17, 14, LIGHTBLUE);
-    Console::printDot(17, 15, LIGHTBLUE);
-    Console::printDot(18, 16, LIGHTBLUE);
-    Console::printDot(19, 17, LIGHTBLUE);
-    Console::printDot(20, 16, LIGHTBLUE);
-    Console::printDot(21, 15, LIGHTBLUE);
-    Console::printDot(22, 16, LIGHTBLUE);
+    Console::printDot(18, 15, LIGHTBLUE);
+    Console::printDot(17, 16, LIGHTBLUE);
+    Console::printDot(16, 16, LIGHTBLUE);
+    // w
+    for (int i = 14; i < 18; i++)
+        Console::printDot(20, i, LIGHTBLUE);
+    Console::printDot(21, 17, LIGHTBLUE);
+    for (int i = 15; i < 17; i++)
+        Console::printDot(22, i, LIGHTBLUE);
     Console::printDot(23, 17, LIGHTBLUE);
-    Console::printDot(24, 16, LIGHTBLUE);
-    Console::printDot(25, 15, LIGHTBLUE);
-    Console::printDot(25, 14, LIGHTBLUE);
+    for (int i = 14; i < 18; i++)
+        Console::printDot(24, i, LIGHTBLUE);
 
     for (int i = 30; i < 50; i++) {
         Console::printDot(i, 11, GRAY);
@@ -197,7 +194,82 @@ void Page::login() {
     Console::gotoEnd();
 }
 
-// void Page::signUp() {}
+void Page::signUp() {
+    frame();
+    // s
+    for (int i = 5; i < 10; i++) {
+        Console::printDot(i, 3, LIGHTMAGENTA);
+        Console::printDot(i, 5, LIGHTMAGENTA);
+        Console::printDot(i, 7, LIGHTMAGENTA);
+    }
+    Console::printDot(5, 4, LIGHTMAGENTA);
+    Console::printDot(9, 6, LIGHTMAGENTA);
+    // i
+    for (int i = 3; i < 8; i++)
+        Console::printDot(11, i, LIGHTMAGENTA);
+    // g
+    for (int i = 3; i < 8; i++)
+        Console::printDot(13, i, LIGHTMAGENTA);
+    for (int i = 13; i < 18; i++) {
+        Console::printDot(i, 3, LIGHTMAGENTA);
+        Console::printDot(i, 7, LIGHTMAGENTA);
+    }
+    Console::printDot(17, 6, LIGHTMAGENTA);
+    for (int i = 15; i < 18; i++)
+        Console::printDot(i, 5, LIGHTMAGENTA);
+    // n
+    for (int i = 3; i < 8; i++)
+        Console::printDot(19, i, LIGHTMAGENTA);
+    Console::printDot(20, 4, LIGHTMAGENTA);
+    Console::printDot(21, 5, LIGHTMAGENTA);
+    Console::printDot(22, 6, LIGHTMAGENTA);
+    Console::printDot(23, 7, LIGHTMAGENTA);
+    for (int i = 3; i < 8; i++)
+        Console::printDot(23, i, LIGHTMAGENTA);
+    // u
+    for (int i = 3; i < 8; i++) {
+        Console::printDot(27, i, LIGHTMAGENTA);
+        Console::printDot(31, i, LIGHTMAGENTA);
+    }
+    for (int i = 27; i < 31; i++)
+        Console::printDot(i, 7, LIGHTMAGENTA);
+    // p
+    for (int i = 3; i < 8; i++)
+        Console::printDot(33, i, LIGHTMAGENTA);
+    for (int i = 33; i < 37; i++) {
+        Console::printDot(i, 3, LIGHTMAGENTA);
+        Console::printDot(i, 5, LIGHTMAGENTA);
+    }
+    for (int i = 3; i < 6; i++)
+        Console::printDot(36, i, LIGHTMAGENTA);
+    for (int i = 5; i < WIDTH - 3; i++)
+        Console::printDot(i, 9, MAGENTA);
+
+    Console::gotoXY(15, 13);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("ID       :", CYAN);
+
+    Console::gotoXY(15, 15);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("PW       :", MAGENTA);
+
+    Console::gotoXY(15, 17);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("PW AGAIN     :", LIGHTRED);
+
+    for (int i = 23; i < 43; i++)
+        for (int j = 20; j < 23; j++) {
+            if (i == 23 || i == 42 || j == 20 || j == 22)
+                Console::printDot(i, j, MAGENTA);
+            else
+                Console::printDot(i, j, LIGHTYELLOW);
+        }
+    Console::gotoXY(29, 21);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString("SIGN  UP", MAGENTA);
+
+    Console::gotoEnd();
+}
 
 void Page::mainPage() {
     frame();

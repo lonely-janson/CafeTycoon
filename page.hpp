@@ -15,7 +15,7 @@ class Page {
     void frame();
     void startPage();
     void login();
-    // void signUp();
+    void signUp();
     void mainPage();
     void workingPage1_day();
     void makingDrink();
