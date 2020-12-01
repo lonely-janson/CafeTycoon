@@ -22,6 +22,8 @@ class Page {
     void workingPage2();
     void workingPage3();
     void workingPage4();
+    void myInfo();
+    void store();
 };
 
 #endif

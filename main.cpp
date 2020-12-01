@@ -17,8 +17,10 @@ int main() {
     // page.workingPage1();
     // page.makingDrink();
     // page.workingPage2();
-    page.workingPage3();
+    // page.workingPage3();
     // page.workingPage4();
+    // page.myInfo();
+    page.store();
 
     // Data data;
 
