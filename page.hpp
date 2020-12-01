@@ -17,13 +17,18 @@ class Page {
     void login();
     // void signUp();
     void mainPage();
-    void workingPage1();
+    void workingPage1_day();
     void makingDrink();
-    void workingPage2();
-    void workingPage3();
-    void workingPage4();
+    void workingPage2_day();
+    void workingPage3_day();
+    void workingPage4_day();
+    void workingPage1_night();
+    void workingPage2_night();
+    void workingPage3_night();
+    void workingPage4_night();
     void myInfo();
     void store();
+    void showTimer();
 };
 
 #endif

@@ -384,12 +384,15 @@ void Page::mainPage() {
     Console::gotoEnd();
 }
 
-void Page::workingPage1() {
+void Page::workingPage1_day() {
     frame();
 
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
             Console::printDot(i, j, GRAY);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, LIGHTBLUE);
 
     for (int i = 7; i < 19; i++)
         for (int j = 5; j < 17; j++)
@@ -424,23 +427,23 @@ void Page::workingPage1() {
         Console::printDot(i, 16, LIGHTRED);
 
     for (int i = 7; i > 5; i--)
-        Console::printDot(25, i, LIGHTBLUE);
+        Console::printDot(25, i, BLACK);
 
-    Console::printDot(24, 8, LIGHTBLUE);
-    Console::printDot(23, 9, LIGHTBLUE);
-    Console::printDot(22, 10, LIGHTBLUE);
-    Console::printDot(23, 11, LIGHTBLUE);
-    Console::printDot(24, 12, LIGHTBLUE);
+    Console::printDot(24, 8, BLACK);
+    Console::printDot(23, 9, BLACK);
+    Console::printDot(22, 10, BLACK);
+    Console::printDot(23, 11, BLACK);
+    Console::printDot(24, 12, BLACK);
 
     for (int i = 13; i < 15; i++)
-        Console::printDot(25, i, LIGHTBLUE);
+        Console::printDot(25, i, BLACK);
 
     for (int i = 26; i < 52; i++) {
-        Console::printDot(i, 6, LIGHTBLUE);
-        Console::printDot(i, 14, LIGHTBLUE);
+        Console::printDot(i, 6, BLACK);
+        Console::printDot(i, 14, BLACK);
     }
     for (int i = 6; i < 15; i++)
-        Console::printDot(52, i, LIGHTBLUE);
+        Console::printDot(52, i, BLACK);
 
     Console::gotoEnd();
 }
@@ -466,7 +469,7 @@ void Page::makingDrink() {
     for (int i = 4; i < 45; i++)
         Console::printDot(i, 10, GRAY);
 
-    for (int i = 7; i < 24; i++) {
+    for (int i = 7; i < 22; i++) {
         Console::printDot(13, i, GRAY);
         Console::printDot(24, i, GRAY);
         Console::printDot(35, i, GRAY);
@@ -504,11 +507,14 @@ void Page::makingDrink() {
     Console::gotoEnd();
 }
 
-void Page::workingPage2() {
+void Page::workingPage2_day() {
     frame();
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
             Console::printDot(i, j, GRAY);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, LIGHTBLUE);
     for (int i = 52; i < 58; i++)
         Console::printDot(i, 10, LIGHTYELLOW);
     for (int i = 51; i < 59; i++)
@@ -540,32 +546,36 @@ void Page::workingPage2() {
 
     //말풍선
     for (int i = 7; i > 5; i--)
-        Console::printDot(42, i, LIGHTBLUE);
-    Console::printDot(43, 8, LIGHTBLUE);
-    Console::printDot(44, 9, LIGHTBLUE);
-    Console::printDot(45, 10, LIGHTBLUE);
-    Console::printDot(44, 11, LIGHTBLUE);
-    Console::printDot(43, 12, LIGHTBLUE);
+        Console::printDot(42, i, BLACK);
+    Console::printDot(43, 8, BLACK);
+    Console::printDot(44, 9, BLACK);
+    Console::printDot(45, 10, BLACK);
+    Console::printDot(44, 11, BLACK);
+    Console::printDot(43, 12, BLACK);
     for (int i = 13; i < 15; i++)
-        Console::printDot(42, i, LIGHTBLUE);
+        Console::printDot(42, i, BLACK);
     for (int i = 42; i > 16; i--) {
-        Console::printDot(i, 6, LIGHTBLUE);
-        Console::printDot(i, 14, LIGHTBLUE);
+        Console::printDot(i, 6, BLACK);
+        Console::printDot(i, 14, BLACK);
     }
     for (int i = 6; i < 15; i++)
-        Console::printDot(16, i, LIGHTBLUE);
+        Console::printDot(16, i, BLACK);
     Console::gotoXY(18, 10);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("주문하신 음료 나왔습니다~", BLUE);
+    Console::setBackground(LIGHTBLUE);
+    Console::printColorString("주문하신 음료 나왔습니다~", BLACK);
     Console::gotoEnd();
 }
 
-void Page::workingPage3() {
+void Page::workingPage3_day() {
     frame();
 
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
             Console::printDot(i, j, GRAY);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, LIGHTBLUE);
+
     for (int i = 52; i < 58; i++)
         Console::printDot(i, 10, LIGHTYELLOW);
     for (int i = 51; i < 59; i++)
@@ -630,31 +640,34 @@ void Page::workingPage3() {
 
     //말풍선
     for (int i = 5; i > 3; i--)
-        Console::printDot(23, i, LIGHTBLUE);
+        Console::printDot(23, i, BLACK);
 
-    Console::printDot(22, 6, LIGHTBLUE);
-    Console::printDot(21, 7, LIGHTBLUE);
-    Console::printDot(22, 8, LIGHTBLUE);
+    Console::printDot(22, 6, BLACK);
+    Console::printDot(21, 7, BLACK);
+    Console::printDot(22, 8, BLACK);
 
     for (int i = 9; i < 11; i++)
-        Console::printDot(23, i, LIGHTBLUE);
+        Console::printDot(23, i, BLACK);
 
     for (int i = 24; i < 47; i++) {
-        Console::printDot(i, 4, LIGHTBLUE);
-        Console::printDot(i, 10, LIGHTBLUE);
+        Console::printDot(i, 4, BLACK);
+        Console::printDot(i, 10, BLACK);
     }
     for (int i = 4; i < 10; i++)
-        Console::printDot(46, i, LIGHTBLUE);
+        Console::printDot(46, i, BLACK);
 
     Console::gotoEnd();
 }
 
-void Page::workingPage4() {
+void Page::workingPage4_day() {
     frame();
 
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
             Console::printDot(i, j, GRAY);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, LIGHTBLUE);
     for (int i = 52; i < 58; i++)
         Console::printDot(i, 10, LIGHTYELLOW);
     for (int i = 51; i < 59; i++)
@@ -719,21 +732,329 @@ void Page::workingPage4() {
 
     //말풍선
     for (int i = 5; i > 3; i--)
-        Console::printDot(23, i, LIGHTBLUE);
+        Console::printDot(23, i, BLACK);
 
-    Console::printDot(22, 6, LIGHTBLUE);
-    Console::printDot(21, 7, LIGHTBLUE);
-    Console::printDot(22, 8, LIGHTBLUE);
+    Console::printDot(22, 6, BLACK);
+    Console::printDot(21, 7, BLACK);
+    Console::printDot(22, 8, BLACK);
 
     for (int i = 9; i < 11; i++)
-        Console::printDot(23, i, LIGHTBLUE);
+        Console::printDot(23, i, BLACK);
 
     for (int i = 24; i < 47; i++) {
-        Console::printDot(i, 4, LIGHTBLUE);
-        Console::printDot(i, 10, LIGHTBLUE);
+        Console::printDot(i, 4, BLACK);
+        Console::printDot(i, 10, BLACK);
     }
     for (int i = 4; i < 10; i++)
-        Console::printDot(46, i, LIGHTBLUE);
+        Console::printDot(46, i, BLACK);
+
+    Console::gotoEnd();
+}
+
+void Page::workingPage1_night() {
+    frame();
+
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 17; j < HEIGHT; j++)
+            Console::printDot(i, j, BLACK);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, BLUE);
+
+    for (int i = 7; i < 19; i++)
+        for (int j = 5; j < 17; j++)
+            Console::printDot(i, j, BLACK);
+
+    for (int i = 8; i < 18; i++)
+        for (int j = 8; j < 11; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    for (int i = 11; i < 15; i++)
+        for (int j = 11; j < 13; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    Console::gotoXY(10, 9);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("|    |", BLACK);
+
+    Console::gotoXY(11, 10);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" ㅁ  ", BLACK);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 13, LIGHTRED);
+
+    for (int i = 9; i < 17; i++)
+        Console::printDot(i, 14, LIGHTRED);
+
+    for (int i = 8; i < 18; i++)
+        Console::printDot(i, 15, LIGHTRED);
+
+    for (int i = 7; i < 19; i++)
+        Console::printDot(i, 16, LIGHTRED);
+
+    for (int i = 7; i > 5; i--)
+        Console::printDot(25, i, LIGHTGRAY);
+
+    Console::printDot(24, 8, LIGHTGRAY);
+    Console::printDot(23, 9, LIGHTGRAY);
+    Console::printDot(22, 10, LIGHTGRAY);
+    Console::printDot(23, 11, LIGHTGRAY);
+    Console::printDot(24, 12, LIGHTGRAY);
+
+    for (int i = 13; i < 15; i++)
+        Console::printDot(25, i, LIGHTGRAY);
+
+    for (int i = 26; i < 52; i++) {
+        Console::printDot(i, 6, LIGHTGRAY);
+        Console::printDot(i, 14, LIGHTGRAY);
+    }
+    for (int i = 6; i < 15; i++)
+        Console::printDot(52, i, LIGHTGRAY);
+
+    Console::gotoEnd();
+}
+
+void Page::workingPage2_night() {
+    frame();
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 17; j < HEIGHT; j++)
+            Console::printDot(i, j, BLACK);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, BLUE);
+    for (int i = 52; i < 58; i++)
+        Console::printDot(i, 10, LIGHTYELLOW);
+    for (int i = 51; i < 59; i++)
+        Console::printDot(i, 11, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 12, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 13, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        for (int j = 14; j < 18; j++)
+            Console::printDot(i, j, LIGHTYELLOW);
+    for (int i = 52; i < 58; i++)
+        for (int j = 18; j < 20; j++)
+            Console::printDot(i, j, LIGHTMAGENTA);
+    Console::printDot(51, 18, LIGHTMAGENTA);
+    Console::printDot(50, 19, LIGHTMAGENTA);
+    Console::printDot(49, 20, LIGHTGRAY);
+    Console::printDot(58, 18, LIGHTMAGENTA);
+    Console::printDot(59, 19, LIGHTMAGENTA);
+    Console::printDot(60, 20, LIGHTGRAY);
+    for (int i = 52; i < 58; i++)
+        for (int j = 20; j < 24; j++) {
+            Console::printDot(i, j, LIGHTBLUE);
+        }
+    Console::printDot(52, 24, GRAY);
+    Console::printDot(53, 24, GRAY);
+    Console::printDot(57, 24, GRAY);
+    Console::printDot(56, 24, GRAY);
+
+    //말풍선
+    for (int i = 7; i > 5; i--)
+        Console::printDot(42, i, LIGHTGRAY);
+    Console::printDot(43, 8, LIGHTGRAY);
+    Console::printDot(44, 9, LIGHTGRAY);
+    Console::printDot(45, 10, LIGHTGRAY);
+    Console::printDot(44, 11, LIGHTGRAY);
+    Console::printDot(43, 12, LIGHTGRAY);
+    for (int i = 13; i < 15; i++)
+        Console::printDot(42, i, LIGHTGRAY);
+    for (int i = 42; i > 16; i--) {
+        Console::printDot(i, 6, LIGHTGRAY);
+        Console::printDot(i, 14, LIGHTGRAY);
+    }
+    for (int i = 6; i < 15; i++)
+        Console::printDot(16, i, LIGHTGRAY);
+    Console::gotoXY(18, 10);
+    Console::setBackground(BLUE);
+    Console::printColorString("주문하신 음료 나왔습니다~", LIGHTGRAY);
+    Console::gotoEnd();
+}
+
+void Page::workingPage3_night() {
+    frame();
+
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 17; j < HEIGHT; j++)
+            Console::printDot(i, j, BLACK);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, BLUE);
+
+    for (int i = 52; i < 58; i++)
+        Console::printDot(i, 10, LIGHTYELLOW);
+    for (int i = 51; i < 59; i++)
+        Console::printDot(i, 11, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 12, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 13, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        for (int j = 14; j < 18; j++)
+            Console::printDot(i, j, LIGHTYELLOW);
+    for (int i = 52; i < 58; i++)
+        for (int j = 18; j < 20; j++)
+            Console::printDot(i, j, LIGHTMAGENTA);
+    Console::printDot(51, 18, LIGHTMAGENTA);
+    Console::printDot(50, 19, LIGHTMAGENTA);
+    Console::printDot(49, 20, LIGHTGRAY);
+    Console::printDot(58, 18, LIGHTMAGENTA);
+    Console::printDot(59, 19, LIGHTMAGENTA);
+    Console::printDot(60, 20, LIGHTGRAY);
+    for (int i = 52; i < 58; i++)
+        for (int j = 20; j < 24; j++) {
+            Console::printDot(i, j, LIGHTBLUE);
+        }
+    Console::printDot(52, 24, GRAY);
+    Console::printDot(53, 24, GRAY);
+    Console::printDot(57, 24, GRAY);
+    Console::printDot(56, 24, GRAY);
+
+    //손님
+    for (int i = 8; i < 18; i++)
+        for (int j = 7; j < 17; j++)
+            Console::printDot(i, j, BLACK);
+
+    for (int i = 9; i < 17; i++)
+        for (int j = 10; j < 12; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    for (int i = 11; i < 15; i++)
+        for (int j = 12; j < 14; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    Console::gotoXY(10, 10);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("^    ^", BLACK);
+
+    Console::gotoXY(11, 11);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" ㅁ  ", BLACK);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 13, LIGHTRED);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 14, LIGHTRED);
+
+    for (int i = 9; i < 17; i++)
+        Console::printDot(i, 15, LIGHTRED);
+
+    for (int i = 8; i < 18; i++)
+        Console::printDot(i, 16, LIGHTRED);
+
+    //말풍선
+    for (int i = 5; i > 3; i--)
+        Console::printDot(23, i, LIGHTGRAY);
+
+    Console::printDot(22, 6, LIGHTGRAY);
+    Console::printDot(21, 7, LIGHTGRAY);
+    Console::printDot(22, 8, LIGHTGRAY);
+
+    for (int i = 9; i < 11; i++)
+        Console::printDot(23, i, LIGHTGRAY);
+
+    for (int i = 24; i < 47; i++) {
+        Console::printDot(i, 4, LIGHTGRAY);
+        Console::printDot(i, 10, LIGHTGRAY);
+    }
+    for (int i = 4; i < 10; i++)
+        Console::printDot(46, i, LIGHTGRAY);
+
+    Console::gotoEnd();
+}
+
+void Page::workingPage4_night() {
+    frame();
+
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 17; j < HEIGHT; j++)
+            Console::printDot(i, j, BLACK);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, BLUE);
+    for (int i = 52; i < 58; i++)
+        Console::printDot(i, 10, LIGHTYELLOW);
+    for (int i = 51; i < 59; i++)
+        Console::printDot(i, 11, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 12, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        Console::printDot(i, 13, LIGHTYELLOW);
+    for (int i = 50; i < 60; i++)
+        for (int j = 14; j < 18; j++)
+            Console::printDot(i, j, LIGHTYELLOW);
+    for (int i = 52; i < 58; i++)
+        for (int j = 18; j < 20; j++)
+            Console::printDot(i, j, LIGHTMAGENTA);
+    Console::printDot(51, 18, LIGHTMAGENTA);
+    Console::printDot(50, 19, LIGHTMAGENTA);
+    Console::printDot(49, 20, LIGHTGRAY);
+    Console::printDot(58, 18, LIGHTMAGENTA);
+    Console::printDot(59, 19, LIGHTMAGENTA);
+    Console::printDot(60, 20, LIGHTGRAY);
+    for (int i = 52; i < 58; i++)
+        for (int j = 20; j < 24; j++) {
+            Console::printDot(i, j, LIGHTBLUE);
+        }
+    Console::printDot(52, 24, GRAY);
+    Console::printDot(53, 24, GRAY);
+    Console::printDot(57, 24, GRAY);
+    Console::printDot(56, 24, GRAY);
+
+    //손님
+    for (int i = 8; i < 18; i++)
+        for (int j = 7; j < 17; j++)
+            Console::printDot(i, j, BLACK);
+
+    for (int i = 9; i < 17; i++)
+        for (int j = 10; j < 12; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    for (int i = 11; i < 15; i++)
+        for (int j = 12; j < 14; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    Console::gotoXY(10, 10);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("\\    /", BLACK);
+
+    Console::gotoXY(11, 11);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" ㅁ  ", BLACK);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 13, LIGHTRED);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 14, LIGHTRED);
+
+    for (int i = 9; i < 17; i++)
+        Console::printDot(i, 15, LIGHTRED);
+
+    for (int i = 8; i < 18; i++)
+        Console::printDot(i, 16, LIGHTRED);
+
+    //말풍선
+    for (int i = 5; i > 3; i--)
+        Console::printDot(23, i, LIGHTGRAY);
+
+    Console::printDot(22, 6, LIGHTGRAY);
+    Console::printDot(21, 7, LIGHTGRAY);
+    Console::printDot(22, 8, LIGHTGRAY);
+
+    for (int i = 9; i < 11; i++)
+        Console::printDot(23, i, LIGHTGRAY);
+
+    for (int i = 24; i < 47; i++) {
+        Console::printDot(i, 4, LIGHTGRAY);
+        Console::printDot(i, 10, LIGHTGRAY);
+    }
+    for (int i = 4; i < 10; i++)
+        Console::printDot(46, i, LIGHTGRAY);
 
     Console::gotoEnd();
 }
@@ -875,6 +1196,24 @@ void Page::store() {
     Console::gotoXY(15, 19);
     Console::setBackground(LIGHTGRAY);
     Console::printColorString("4. 카라멜 마끼야또", GREEN);
+
+    Console::gotoEnd();
+}
+
+void Page::showTimer() {
+    for (int i = 1; i < 15; i++) {
+        for (int j = HEIGHT - 2; j <= HEIGHT; j++)
+            Console::printDot(i, j, LIGHTMAGENTA);
+    }
+    Console::gotoXY(2, HEIGHT - 2);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("TIME LEFT", LIGHTYELLOW);
+    Console::gotoXY(1, HEIGHT - 1);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("￣￣￣￣￣￣￣", LIGHTYELLOW);
+    Console::gotoXY(5, HEIGHT);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("00:00:00", LIGHTYELLOW);
 
     Console::gotoEnd();
 }

@@ -14,13 +14,18 @@ int main() {
     // page.login();
     // page.signUp();
     // page.mainPage();
-    // page.workingPage1();
-    // page.makingDrink();
-    // page.workingPage2();
-    // page.workingPage3();
-    // page.workingPage4();
+    // page.workingPage1_day();
+    page.makingDrink();
+    // page.workingPage2_day();
+    // page.workingPage3_day();
+    // page.workingPage4_day();
+    // page.workingPage1_night();
+    // page.workingPage2_night();
+    // page.workingPage3_night();
+    // page.workingPage4_night();
     // page.myInfo();
-    page.store();
+    // page.store();
+    page.showTimer();
 
     // Data data;
 
