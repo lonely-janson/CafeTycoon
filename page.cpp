@@ -457,89 +457,6 @@ void Page::mainPage() {
     Console::gotoEnd();
 }
 
-void Page::workingPage1_day(map<int, int> &orderd) {
-    frame();
-    int i;
-
-    for (int i = 3; i < WIDTH - 1; i++)
-        for (int j = 17; j < HEIGHT; j++)
-            Console::printDot(i, j, GRAY);
-    for (int i = 3; i < WIDTH - 1; i++)
-        for (int j = 2; j < 17; j++)
-            Console::printDot(i, j, LIGHTBLUE);
-
-    for (int i = 7; i < 19; i++)
-        for (int j = 5; j < 17; j++)
-            Console::printDot(i, j, BLACK);
-
-    for (int i = 8; i < 18; i++)
-        for (int j = 8; j < 11; j++)
-            Console::printDot(i, j, LIGHTGRAY);
-
-    for (int i = 11; i < 15; i++)
-        for (int j = 11; j < 13; j++)
-            Console::printDot(i, j, LIGHTGRAY);
-
-    Console::gotoXY(10, 9);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("|    |", BLACK);
-
-    Console::gotoXY(11, 10);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString(" ㅁ  ", BLACK);
-
-    for (int i = 10; i < 16; i++)
-        Console::printDot(i, 13, LIGHTRED);
-
-    for (int i = 9; i < 17; i++)
-        Console::printDot(i, 14, LIGHTRED);
-
-    for (int i = 8; i < 18; i++)
-        Console::printDot(i, 15, LIGHTRED);
-
-    for (int i = 7; i < 19; i++)
-        Console::printDot(i, 16, LIGHTRED);
-
-    for (int i = 7; i > 5; i--)
-        Console::printDot(25, i, BLACK);
-
-    Console::printDot(24, 8, BLACK);
-    Console::printDot(23, 9, BLACK);
-    Console::printDot(22, 10, BLACK);
-    Console::printDot(23, 11, BLACK);
-    Console::printDot(24, 12, BLACK);
-
-    for (int i = 13; i < 15; i++)
-        Console::printDot(25, i, BLACK);
-
-    for (int i = 26; i < 56; i++) {
-        Console::printDot(i, 6, LIGHTBLUE);
-        Console::printDot(i, 14, LIGHTBLUE);
-    }
-    for (int i = 6; i < 15; i++)
-        Console::printDot(55, i, LIGHTBLUE);
-
-    Console::gotoXY(27, 8);
-    for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
-        string temp = coffeeName[iter->first] + to_string(iter->second) + "잔 ";
-        Console::setBackground(LIGHTGRAY);
-        Console::printColorString(temp.c_str(), MAGENTA);
-        if (i % 2 == 1) {
-            Console::gotoXY(27, 10);
-        }
-    }
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("\b 주세요", MAGENTA);
-    for (int i = 26; i < 52; i++) {
-        Console::printDot(i, 6, BLACK);
-        Console::printDot(i, 14, BLACK);
-    }
-    for (int i = 6; i < 15; i++)
-        Console::printDot(52, i, BLACK);
-
-    Console::gotoEnd();
-}
-
 void Page::makingDrink(map<int, int> &orderd, int level) {
     if (level > 5)
         level = 5;
@@ -648,6 +565,89 @@ void Page::makingDrink(map<int, int> &orderd, int level) {
     Console::gotoXY(4, 12);
     Console::setBackground(LIGHTGRAY);
     Console::printColorString(">", RED);
+}
+
+void Page::workingPage1_day(map<int, int> &orderd) {
+    frame();
+    int i;
+
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 17; j < HEIGHT; j++)
+            Console::printDot(i, j, GRAY);
+    for (int i = 3; i < WIDTH - 1; i++)
+        for (int j = 2; j < 17; j++)
+            Console::printDot(i, j, LIGHTBLUE);
+
+    for (int i = 7; i < 19; i++)
+        for (int j = 5; j < 17; j++)
+            Console::printDot(i, j, BLACK);
+
+    for (int i = 8; i < 18; i++)
+        for (int j = 8; j < 11; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    for (int i = 11; i < 15; i++)
+        for (int j = 11; j < 13; j++)
+            Console::printDot(i, j, LIGHTGRAY);
+
+    Console::gotoXY(10, 9);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("|    |", BLACK);
+
+    Console::gotoXY(11, 10);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" ㅁ  ", BLACK);
+
+    for (int i = 10; i < 16; i++)
+        Console::printDot(i, 13, LIGHTRED);
+
+    for (int i = 9; i < 17; i++)
+        Console::printDot(i, 14, LIGHTRED);
+
+    for (int i = 8; i < 18; i++)
+        Console::printDot(i, 15, LIGHTRED);
+
+    for (int i = 7; i < 19; i++)
+        Console::printDot(i, 16, LIGHTRED);
+
+    for (int i = 7; i > 5; i--)
+        Console::printDot(25, i, BLACK);
+
+    Console::printDot(24, 8, BLACK);
+    Console::printDot(23, 9, BLACK);
+    Console::printDot(22, 10, BLACK);
+    Console::printDot(23, 11, BLACK);
+    Console::printDot(24, 12, BLACK);
+
+    for (int i = 13; i < 15; i++)
+        Console::printDot(25, i, BLACK);
+
+    for (int i = 26; i < 56; i++) {
+        Console::printDot(i, 6, LIGHTBLUE);
+        Console::printDot(i, 14, LIGHTBLUE);
+    }
+    for (int i = 6; i < 15; i++)
+        Console::printDot(55, i, LIGHTBLUE);
+
+    Console::gotoXY(27, 8);
+    for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
+        string temp = coffeeName[iter->first] + to_string(iter->second) + "잔 ";
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(temp.c_str(), MAGENTA);
+        if (i % 2 == 1) {
+            Console::gotoXY(27, 10);
+        }
+    }
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("\b 주세요", MAGENTA);
+    for (int i = 26; i < 52; i++) {
+        Console::printDot(i, 6, BLACK);
+        Console::printDot(i, 14, BLACK);
+    }
+    for (int i = 6; i < 15; i++)
+        Console::printDot(52, i, BLACK);
+
+    Console::gotoEnd();
 }
 
 void Page::workingPage2_day() {
@@ -896,6 +896,7 @@ void Page::workingPage4_day() {
 
 void Page::workingPage1_night(map<int, int> &orderd) {
     frame();
+    int i;
 
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
@@ -954,6 +955,24 @@ void Page::workingPage1_night(map<int, int> &orderd) {
     }
     for (int i = 6; i < 15; i++)
         Console::printDot(52, i, LIGHTGRAY);
+
+    Console::gotoXY(27, 8);
+    for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
+        string temp = coffeeName[iter->first] + to_string(iter->second) + "잔 ";
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(temp.c_str(), MAGENTA);
+        if (i % 2 == 1) {
+            Console::gotoXY(27, 10);
+        }
+    }
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("\b 주세요", MAGENTA);
+    for (int i = 26; i < 52; i++) {
+        Console::printDot(i, 6, BLACK);
+        Console::printDot(i, 14, BLACK);
+    }
+    for (int i = 6; i < 15; i++)
+        Console::printDot(52, i, BLACK);
 
     Console::gotoEnd();
 }

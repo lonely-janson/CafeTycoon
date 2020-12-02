@@ -1,7 +1,6 @@
 #ifndef __USER_HPP__
 #define __USER_HPP__
 
-#include "perform.hpp"
 #include <string>
 #include <vector>
 
@@ -25,7 +24,7 @@ class User {
 
   public:
     User(string _name); //임시
-    User(Data &data);
+    // sUser(Data &data);
     User(User &user);
     string getName() { return name; }
     int getlevel() { return level; }

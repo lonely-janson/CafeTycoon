@@ -199,8 +199,9 @@ void gameOver(int signum) {
 void *showTime(void *) {
     for (int i = 0; i < 60; i++) {
         sleep(1);
-        // cout << i << endl;
-        // 시간초 보여주는 함수 넣기;
+        Console::gotoXY(5, HEIGHT);
+        Console::setBackground(LIGHTMAGENTA);
+        Console::printColorString(to_string(i).c_str(), LIGHTYELLOW);
     }
 }
 
@@ -286,7 +287,7 @@ void Game::start(User &user) {
         uniform_int_distribution<int> randKindOfType(0, level); //커피 종류
 
         //타이머 설정
-        alarm(100);
+        // alarm(100);
 
         // 시간 보여주기
         pthread_t tid = 0;
@@ -318,7 +319,7 @@ void Game::start(User &user) {
 
             // ------ 디자인 변경 필요 -----
             //주문 정보 출력
-            page.workingPage1(orderd);
+            page.workingPage1_day(orderd);
 
             // ------ 디자인 변경 필요 -----
             //레시피 출력 여부
@@ -593,7 +594,7 @@ void Game::start(User &user) {
                 }
             }
 
-            (successOrfail) ? page.workingPage3() : page.workingPage4();
+            (successOrfail) ? page.workingPage3_day() : page.workingPage4_day();
 
             //-----------test--------
             cout << "totalPrice : " << totalPrice
