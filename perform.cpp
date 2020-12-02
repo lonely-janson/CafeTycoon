@@ -1,6 +1,7 @@
 #include "perform.hpp"
 #include "console.hpp"
 #include "user.hpp"
+#include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <map>
@@ -12,10 +13,11 @@
 #include <stack>
 #include <stdlib.h>
 #include <sys/ipc.h>
-#include <sys/msg.h>
+#include <sys/shm.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <wait.h>
 
 using namespace std;
 
@@ -41,12 +43,27 @@ Data::Data() {
             exit(-2);
         }
     }
+
+    ranking = dataPath + "/ranking";
+    if (access(ranking.c_str(), F_OK) == -1) {
+        if (mkdir(ranking.c_str(), PERMS) == -1) {
+            perror("mkdir() error!");
+            exit(-2);
+        }
+    }
 }
 
 bool Data::signUp() {
     string id;
     string pw;
+    string userSell;
+    string userRanking;
+    string userLevel;
+
     string pwPath;
+    string userRankingPath;
+    string userSellPath;
+    string userLevelPath;
 
     int fd = 0;
     ssize_t wsize;
@@ -88,6 +105,19 @@ bool Data::signUp() {
         rmdir(id.c_str());
         return false;
     }
+
+    userRankingPath = ranking + "/user_id";
+    mkdir(userRankingPath.c_str(), 0644);
+
+    userSellPath = userRanking + "usersell.txt";
+    userSell = "0";
+    fd = open(userSellPath.c_str(), O_CREAT | O_TRUNC | O_RDWR, PERMS);
+    write(fd, (char *)userSell.c_str(), strlen(userSell.c_str()));
+
+    userLevelPath = userRanking + "userlevel.txt";
+    userLevel = "0";
+    fd = open(userLevelPath.c_str(), O_CREAT | O_TRUNC | O_RDWR, PERMS);
+    write(fd, (char *)userLevel.c_str(), strlen(userLevel.c_str()));
 
     return true;
 }
@@ -175,17 +205,15 @@ void *showTime(void *) {
 }
 
 void Game::start(User &user) {
-    int pid;
+    int pid; // 첫 번쨰 pid
     key_t key;
     int id;
-    Msg msg;
-    size_t size = sizeof(msg) - sizeof(long);
+    int *shmaddr = NULL; // 0:금액, 1:잔수, 2:경험치
 
     string checkShowRecipe;
 
-    msg.type = 1;
     key = ftok("./main.cpp", 1);
-    id = msgget(key, IPC_CREAT | 0600);
+    id = shmget(key, MAX_SIZE, IPC_CREAT | 0600);
 
     pid = fork();
     if (pid == -1) {
@@ -193,22 +221,24 @@ void Game::start(User &user) {
         return;
     } else if (pid == 0) {
         //게임 종료 후 데이터 저장
-
-        msgrcv(id, &msg, size, msg.type, 0);
-        cout << "0 : " << msg.data[0] << ", 1 : " << msg.data[1];
-        user.addMoney(msg.data[0]);
-        user.addCountsell(msg.data[1]);
-        user.addEx(msg.data[2]);
-
+        shmaddr = (int *)shmat(id, NULL, SHM_RDONLY);
+        waitpid(pid, NULL, 0);
+        user.addMoney(shmaddr[0]);
+        user.addCountsell(shmaddr[1]);
+        user.addEx(shmaddr[2]);
     } else {
+        // 데이터 통신
+        shmaddr = (int *)shmat(id, NULL, 0);
+        memset(shmaddr, 0, sizeof(shmaddr));
         //게임 진행
         map<int, int> orderd; // 커피 종류 및 수량 저장
         int numberOfType;     // 커피 종류 개수
         int kind;             // 커피 종류
+        int showSelectY = 10;
 
-        vector<string> coffeeName = {"americano", "cafeLattee",
-                                     "blackTea",  "cafeMocha",
-                                     "lemonade",  "caramelMacchiato"};
+        vector<string> coffeeName = {"아메리카노", "카페라뗴",
+                                     "홍차",       "카페모카",
+                                     "레몬에이드", "카라멜마끼아또"};
         const vector<int> ex = {10, 10, 12, 15, 17, 20};
         const vector<int> coffeePrice = {2500, 3000, 3500, 4000, 4500, 5000};
         const vector<int> recipe = {12, 32, 1010, 132, 3350, 5532};
@@ -216,10 +246,17 @@ void Game::start(User &user) {
         // americano = 12,cafeLattee = 22, blackTea = 1010, cafeMocha = 122,
         // lemonade = 2250,caramelMacchiato = 5522
         const vector<vector<string>> ingerdients = {
-            {"0", "1", "2"},
-            {"water", "milk", "sparkling water"},
-            {"mochaSyrup", "lemonSyrup", "caramelSyrup"},
-            {"blackTeaBag", "ice", "caramelDrizzle"}};
+            {"샷 1잔", "샷 2잔", "샷 3잔"},
+            {"물", "우유", "탄산수"},
+            {"모카시럽", "레몬시럽", "카라멜시럽"},
+            {"홍차 티벡", "얼음", "드리즐"}};
+
+        map<int, string> inger = {
+            {1, "샷 1잔"},      {2, "샷2잔"},      {3, "샷3잔"},
+            {10, "물"},         {30, "우유"},      {50, "탄산수"},
+            {100, "모카시럽"},  {300, "레몬시럽"}, {500, "카라멜시럽"},
+            {1000, "홍차티백"}, {3000, "얼음"},    {5000, "드리즐"}};
+
         const double failPercnt = 0.8;
 
         map<int, int>::iterator iter;
@@ -227,26 +264,29 @@ void Game::start(User &user) {
 
         int selectIngerdients; //선택한 커피 재료 모음
         int select;            // 선택한 재료 저장
+        int level = (user.getlevel() > 5) ? 5 : user.getlevel();
 
-        vector<vector<int>> makeCoffee; // 최종 제작 커피 저장 배열
-        bool successOrfail;             // 성공 여부
-        int totalPrice;                 // 획득한 돈
-        int countSell;                  // 판매잔 수
-        int totalEx;                    // 총 획득 경험치
+        vector<vector<int>> makeCoffee(
+            6, vector<int>(5)); // 최종 제작 커피 저장 배열
+        bool successOrfail;     // 성공 여부
+        int totalPrice;         // 획득한 돈
+        int totalCup;           // 판매잔 수
+        int totalEx;            // 총 획득 경험치
+        int tempPrice;          // 공유 메모리에 저장할 데이터
+        int tempSell;           // 공유 메모리에 저장할 금액
+        int tempEx;             // 공유 메모리에 저장할 경험치
 
         char ch; // 키보드 입력
 
         //난수 생성
         random_device rd;
         mt19937 gen(rd());
-        uniform_int_distribution<int> randNumberOfType(1, 3); // 종류 개수
-        uniform_int_distribution<int> randQuantity(1, 5);     // 주문 개수
-        uniform_int_distribution<int> randKindOfType(
-            0,
-            user.getlevel()); //커피 종류
+        uniform_int_distribution<int> randNumberOfType(1, 2);   // 종류 개수
+        uniform_int_distribution<int> randQuantity(1, 5);       // 주문 개수
+        uniform_int_distribution<int> randKindOfType(0, level); //커피 종류
 
         //타이머 설정
-        // alarm(10);
+        alarm(100);
 
         // 시간 보여주기
         pthread_t tid = 0;
@@ -254,12 +294,14 @@ void Game::start(User &user) {
             perror("pthread_creat() error!");
             exit(-1);
         }
+        pthread_detach(tid);
 
         if (signal(SIGALRM, gameOver) == SIG_ERR) {
             perror("signal() error!");
         }
 
         while (1) {
+
             numberOfType = randNumberOfType(gen);
 
             // 메뉴 주문
@@ -268,6 +310,7 @@ void Game::start(User &user) {
                 c_end = orderd.end();
                 if (user.getRecipe(kind) && orderd.find(kind) == c_end) {
                     orderd[kind] = randQuantity(gen);
+                    totalCup += orderd[kind];
                 } else {
                     i--;
                 }
@@ -275,7 +318,8 @@ void Game::start(User &user) {
 
             // ------ 디자인 변경 필요 -----
             //주문 정보 출력
-            page.makingDrink(orderd);
+            page.workingPage1(orderd);
+
             // ------ 디자인 변경 필요 -----
             //레시피 출력 여부
             cout << "Do you want show recepie? : ";
@@ -322,125 +366,210 @@ void Game::start(User &user) {
                 cout << endl;
             }
 
+            page.makingDrink(orderd, level);
             Console::linux_getch(); //입력 버퍼에 남아있는 엔터키 제거
             //배열 초기화
 
-            makeCoffee = vector<vector<int>>(numberOfType, vector<int>(5));
-            iter = orderd.begin();
-            for (int i = 0; i < numberOfType && iter != orderd.end();
-                 iter++, i++) {
+            int x = 4;
+            int y = 12;
+            int drinkingCount = 1;
+            int syrupLevel = (level > 4) ? 4 : level;
+            select = 1;
 
+            iter = orderd.begin();
+            for (int i = 0; iter != orderd.end(); iter++, i++) {
                 for (int j = 0; j < iter->second; j++) {
+                    Console::gotoXY(26, 5);
+                    Console::setBackground(LIGHTGRAY);
+                    Console::printColorString(coffeeName[iter->first].c_str(),
+                                              MAGENTA);
+
+                    string drinkCountStr = "(" + to_string(drinkingCount);
+                    drinkCountStr += '/';
+                    drinkCountStr += to_string(totalCup) + ")";
+                    drinkingCount++;
+                    Console::gotoXY(58, 4);
+                    Console::setBackground(LIGHTGRAY);
+                    Console::printColorString("      ", MAGENTA);
+                    Console::gotoXY(58, 4);
+                    Console::setBackground(LIGHTGRAY);
+                    Console::printColorString(drinkCountStr.c_str(), MAGENTA);
+
+                    Console::gotoXY(5, 12);
 
                     selectIngerdients = 0;
 
                     while (1) { // 커피 재료 선택
-                        select = 1;
                         // 키보드 입력
                         while (1) { // 방향키 입력
-                            cout << "select : " << select << endl;
                             ch = Console::linux_getch();
                             if (ch == ENTER) {
+                                ch = 'y';
                                 break;
-                            } else if (ch == 'y') { // 커피 완성
+                            } else if (ch == SPACE) {
                                 break;
                             } else {
                                 Console::linux_getch();
                                 ch = Console::linux_getch();
                                 if (ch == 'A') {
                                     // UP
-                                    if (select / 1000 > 1) //재료 라인
-                                        select -= 2000;
-                                    else if ((select % 1000) / 100 >
-                                             1) //시럽 라인
-                                        select -= 200;
-                                    else if ((select % 100) / 10 >
-                                             1) //베이스 라인
-                                        select -= 20;
-                                    else if ((select % 10) > 1) //샷 라인
-                                        select -= 1;
+                                    if (y > 12) {
+                                        //재료 라인
+                                        y -= 2;
+                                        if (x == 4)
+                                            select -= 2;
+                                        if (x == 14)
+                                            select -= 20;
+                                        if (x == 25)
+                                            select -= 200;
+                                        if (x == 36)
+                                            select -= 2000;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    }
                                 } else if (ch == 'B') {
                                     // DOWN
-                                    if (select / 10 == 0) {
-                                        // 샷 라인
-                                        if (select % 10 < 5) {
-                                            select += 1;
-                                        }
-                                    } else if (select / 100 == 0) {
+                                    if (x == 4 && y < 16) {
+                                        //재료 라인
+                                        y += 2;
+                                        select += 2;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 14 &&
+                                               y < 14 + (level / 3) * 2) {
                                         // 베이스 라인
-                                        if (select % 100 < 50) {
-                                            select += 20;
-                                        }
-                                    } else if (select / 1000 == 0) {
+                                        y += 2;
+                                        select += 20;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 25 &&
+                                               y < 12 + (syrupLevel - 2) * 2) {
                                         // 시럽 라인
-                                        if (select % 1000 < 500) {
-                                            select += 200;
-                                        }
-                                    } else if (select % 10000 < 5000) {
+                                        y += 2;
+                                        select += 200;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 36 &&
+                                               y < 12 + (level - 3) * 2) {
                                         // 재료 라인
+                                        y += 2;
                                         select += 2000;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
                                     }
                                 } else if (ch == 'C') { // RIGHT
-                                    if (select % 10 != 0) {
+                                    if (x == 4) {
                                         //샷 라인
-                                        select = 10;
-                                    } else if (select % 100 != 0) {
+                                        x = 14;
+                                        select *= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 14) {
                                         //베이스 라인
-                                        select = 100;
-                                    } else if (select % 1000 != 0) {
+                                        x = 25;
+                                        select *= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 25) {
                                         //시럽 라인
-                                        select = 1000;
+                                        x = 36;
+                                        select *= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
                                     }
                                 } else if (ch == 'D') { // LEFT
-                                    if (select / 1000 != 0) {
-                                        //재료 라인
-                                        select = 100;
-                                    } else if (select / 100 != 0) {
-                                        //시럽 라인
-                                        select = 10;
-                                    } else if (select / 10 != 0) {
+                                    if (x == 14) {
+                                        //샷 라인
+                                        x = 4;
+                                        select /= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 25) {
                                         //베이스 라인
-                                        select = 1;
+                                        x = 14;
+                                        select /= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
+                                    } else if (x == 36) {
+                                        //시럽 라인
+                                        x = 25;
+                                        select /= 10;
+                                        Console::drawCursor(x, y, LIGHTGRAY,
+                                                            RED);
                                     }
                                 }
                             }
                         }
 
                         if (ch == 'y') {
+                            //커서 지우기
+                            Console::drawCursor(4, 12, LIGHTGRAY, RED);
+
+                            // 선택된 재료 글씨 지우기
+                            for (int i = 10; i < showSelectY; i++) {
+                                Console::gotoXY(50, i);
+                                Console::setBackground(LIGHTGRAY);
+                                Console::printColorString("            ");
+                            }
+
+                            // 현제 재조 중인 글씨 지우기
+                            Console::gotoXY(26, 5);
+                            Console::setBackground(LIGHTGRAY);
+                            Console::printColorString("             ");
+                            //선택된 재료 초기화
+                            showSelectY = 10;
+                            select = 1;
+                            //좌표 초기화
+                            x = 4;
+                            y = 12;
+
                             //커피만들기
                             makeCoffee[i][j] = selectIngerdients;
-                            //--------test-----------
-                            cout << "selectIngerdients : " << selectIngerdients
-                                 << endl;
                             break;
                         }
 
                         // 같은 종류 재료 중복 추가 불가!
                         if (select % 10 != 0) {
                             //샷 라인
-                            selectIngerdients +=
-                                (selectIngerdients % 10 == 0) ? select : 0;
+                            if (selectIngerdients % 10 == 0) {
+                                selectIngerdients += select;
+                                Console::gotoXY(50, showSelectY++);
+                                Console::printColorString(inger[select].c_str(),
+                                                          LIGHTMAGENTA);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, LIGHTGRAY, RED);
+                            }
                         } else if (select % 100 != 0) {
                             //베이스 라인
-                            selectIngerdients +=
-                                ((selectIngerdients % 100) / 10 == 0) ? select
-                                                                      : 0;
+                            if ((selectIngerdients % 100) / 10 == 0) {
+                                selectIngerdients += select;
+                                Console::gotoXY(50, showSelectY++);
+                                Console::printColorString(inger[select].c_str(),
+                                                          LIGHTMAGENTA);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, LIGHTGRAY, RED);
+                            }
                         } else if (select % 1000 != 0) {
                             //시럽 라인
-                            selectIngerdients +=
-                                ((selectIngerdients % 1000) / 100 == 0) ? select
-                                                                        : 0;
+                            if ((selectIngerdients % 1000) / 100 == 0) {
+                                selectIngerdients += select;
+                                Console::gotoXY(50, showSelectY++);
+                                Console::printColorString(inger[select].c_str(),
+                                                          LIGHTMAGENTA);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, LIGHTGRAY, RED);
+                            }
                         } else if (select % 10000 != 0) {
                             //재료 라인
-                            selectIngerdients +=
-                                ((selectIngerdients % 10000) / 1000 == 0)
-                                    ? select
-                                    : 0;
+                            if ((selectIngerdients % 10000) / 1000 == 0) {
+                                selectIngerdients += select;
+                                Console::gotoXY(50, showSelectY++);
+                                Console::printColorString(inger[select].c_str(),
+                                                          LIGHTMAGENTA);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, LIGHTGRAY, RED);
+                            }
                         }
-
-                        //--------test-----------
-                        cout << "selectIngerdients : " << selectIngerdients
-                             << endl;
                     }
                 }
             }
@@ -448,38 +577,38 @@ void Game::start(User &user) {
             iter = orderd.begin();
             successOrfail = true;
             totalPrice = 0;
-            countSell = 0;
             totalEx = 0;
 
             for (int i = 0; i < numberOfType && iter != orderd.end();
                  i++, iter++) {
-                countSell += iter->second;
 
                 for (int j = 0; j < iter->second; j++) {
                     if (recipe[iter->first] != makeCoffee[i][j]) {
                         successOrfail = false;
                         totalPrice += coffeePrice[iter->first] * failPercnt;
-                        cout << coffeeName[iter->first] << ": false" << endl;
                     } else {
                         totalPrice += coffeePrice[iter->first];
                         totalEx += ex[iter->first];
-                        cout << coffeeName[iter->first] << ": true" << endl;
                     }
                 }
             }
 
+            (successOrfail) ? page.workingPage3() : page.workingPage4();
+
             //-----------test--------
             cout << "totalPrice : " << totalPrice
-                 << ", countSell : " << countSell << endl;
-            msg.data[0] = totalPrice;
-            msg.data[1] = countSell;
-            msg.data[2] = totalPrice;
-
-            msgsnd(id, &msg, size, 0); //데이터 저장 프로세스에게 데이터 전송
+                 << ", countSell : " << totalCup << endl;
+            tempPrice = shmaddr[0] + totalPrice;
+            tempSell = shmaddr[1] + totalCup;
+            tempEx = shmaddr[2] + totalEx;
+            memcpy(&shmaddr[0], &tempPrice, sizeof(int));
+            memcpy(&shmaddr[1], &tempSell, sizeof(int));
+            memcpy(&shmaddr[2], &totalEx, sizeof(int));
         }
     }
-
-    msgctl(id, IPC_RMID, NULL);
+    // 게임 종료 정보 출력
+    shmdt(shmaddr);
+    shmctl(id, IPC_RMID, NULL);
 }
 
 // Constructor
@@ -670,4 +799,136 @@ int Store::buyItem(int cursor) {
     // 보였으나 왜 길이가 2이지,,? 라는 생각이 들어서 어떻게 쓰려고 만든
     // 벡터인지 모르겠음 다시 display 함수 호출해야하는지 첫화면으로
     // 돌아가는지 모르겠음
+}
+
+Minigame::Minigame() {
+
+    int cursor;
+
+    wantGame();
+}
+//미니게임 UI 출력
+
+// 그럼 나는 선택해야할 거야
+int Minigame::wantGame() {
+    string input;
+
+    while (1) {
+        cout << "가위바위보가 열리는 미니게임장입니다. 게임을 "
+                "진행하시겠습니까?(y/n)"
+             << endl;
+        cout << "시작하려면 y, 메뉴로 돌아가시려면 n을 입력하세요" << endl;
+        cin >> input;
+
+        if (input == "y") {
+            //이거 그냥 내가 보고면서 하고자 써둠 ! 이런 프로세스를 생각하면서
+            //했음
+            cout << "미니게임에 오신 것을 환영합니다." << endl;
+            cout
+                << "본 미니게임은 가위바위보의 승패 여부에 따라 돈을 늘릴수도, "
+                   "잃을 수도 있습니다. "
+                << endl;
+            cout << "가위바위보에서 이길 시, 배팅한 금액의 1.0~2.0배의 돈을 "
+                    "받을 "
+                    "수 있습니다. "
+                 << endl;
+            cout << "그러나 가위바위보에서 졌을 경우 배팅한 금액을 모두 "
+                    "잃게됩니다."
+                 << endl;
+            wantBatting();
+            break;
+        } else if (input == "n") {
+            break;
+        } else {
+            cout << "잘못된 입력입니다. 다시 시도하세요" << endl;
+        }
+    }
+    return 0;
+}
+
+int Minigame::wantBatting() {
+    string input;
+
+    while (1) {
+        cout << "얼마를 배팅하시겠습니까? 자신이 소유한 잔고 내에서만 "
+                "가능합니다. "
+             << endl;
+        cout << "( 현재 소유 금액 :" << user_money << "원 )" << endl;
+        cin >> gamble_money;
+
+        cout << "배팅하고자 하는 금액이 " << gamble_money << "원 이 맞습니까?"
+             << endl;
+        cin >> input;
+
+        if (input == "y") {
+            cout << "게임을 시작합니다." << endl;
+            break;
+        }
+        if (input == "n") {
+            cout << "다시 입력합니다." << endl;
+        } else {
+            cout << "잘못된 입력입니다. 다시 시도하세요" << endl;
+        }
+    }
+    startGame();
+    return 0;
+}
+
+int Minigame::startGame() {
+    static unsigned int seed = 9876;
+    int random_num = (rand() % 20) / 10;
+    int com_num = (rand() % 3) + 1;
+
+    // 사용자는 어떤걸 낼까
+    int input;
+    cout << "가위바위보 게임을 진행합니다. " << endl;
+    cout << "1. 가위/ 2. 바위/ 3. 보 중에 선택하세요(숫자만 입력)" << endl;
+    cin >> input;
+    // 컴퓨터는 어떤걸 낼까
+    if (com_num = 1) {    // 컴퓨터 - > 가위
+        if (input == 1) { // 유저 -> 가위
+            sameGame(random_num);
+        } else if (input == 2) { // 유저 -> 바위
+            winGame(random_num);
+        } else if (input == 3) { // 유저 -> 보
+            loseGame(random_num);
+        }
+    } else if (com_num = 2) { //컴퓨터 - > 바위
+        if (input == 1) {     // 유저 -> 가위
+            loseGame(random_num);
+        } else if (input == 2) { // 유저 -> 바위
+            sameGame(random_num);
+        } else if (input == 3) { // 유저 -> 보
+            winGame(random_num);
+        }
+
+    } else if (com_num = 3) { //컴퓨터 - > 보
+        if (input == 1) {     // 유저 -> 가위
+            winGame(random_num);
+        } else if (input == 2) { // 유저 -> 바위
+            loseGame(random_num);
+        } else if (input == 3) { // 유저 -> 보
+            sameGame(random_num);
+        }
+    }
+}
+
+int Minigame::winGame(int random_num) {
+    cout << "이겼습니다." << endl;
+    cout << "게임에 배팅한 돈" << gamble_money << "원 의" << random_num
+         << "배인" << gamble_money * random_num << "원 을 받습니다.";
+}
+
+int Minigame::sameGame(int random_num) {
+    cout << "비겼습니다." << endl;
+    cout << "게임에 배팅한 돈" << gamble_money << "원을 잃었습니다." << endl;
+    user_money -= gamble_money;
+    cout << "현재 잔고는" << user_money << "원 니다." << endl;
+}
+
+int Minigame::loseGame(int random_num) {
+    cout << "졌습니다." << endl;
+    cout << "게임에 배팅한 돈" << gamble_money << "원을 잃었습니다." << endl;
+    user_money -= gamble_money;
+    cout << "현재 잔고는" << user_money << "원 입니다." << endl;
 }

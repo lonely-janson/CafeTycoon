@@ -6,6 +6,7 @@
 
 #define BACK 127
 #define ENTER 10
+#define SPACE 32
 #define UP 279165
 #define DOWN 279166
 #define RIGHT 279167
@@ -47,6 +48,7 @@ class Console {
     static void printDot(int x, int y, int color);
     static const char *
     input(int mode = 0, int maxsize = 20); // mode 0 : 일반입력, 1 : 비밀번호
+    static void drawCursor(int _x, int _y, int backColor, int color);
 };
 
 #endif //__CONSOLE_HPP__

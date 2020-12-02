@@ -1,6 +1,5 @@
 #include "page.hpp"
 #include <string>
-#include <vector>
 
 void Page::clear() { system("clear"); }
 
@@ -386,8 +385,9 @@ void Page::mainPage() {
     Console::gotoEnd();
 }
 
-void Page::workingPage1() {
+void Page::workingPage1(map<int, int> &orderd) {
     frame();
+    int i;
 
     for (int i = 3; i < WIDTH - 1; i++)
         for (int j = 17; j < HEIGHT; j++)
@@ -437,21 +437,32 @@ void Page::workingPage1() {
     for (int i = 13; i < 15; i++)
         Console::printDot(25, i, LIGHTBLUE);
 
-    for (int i = 26; i < 52; i++) {
+    for (int i = 26; i < 56; i++) {
         Console::printDot(i, 6, LIGHTBLUE);
         Console::printDot(i, 14, LIGHTBLUE);
     }
     for (int i = 6; i < 15; i++)
-        Console::printDot(52, i, LIGHTBLUE);
+        Console::printDot(55, i, LIGHTBLUE);
+
+    Console::gotoXY(27, 8);
+    for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
+        string temp = coffeeName[iter->first] + to_string(iter->second) + "잔 ";
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(temp.c_str(), MAGENTA);
+        if (i % 2 == 1) {
+            Console::gotoXY(27, 10);
+        }
+    }
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("\b 주세요", MAGENTA);
 
     Console::gotoEnd();
 }
 
-void Page::makingDrink(map<int, int> orderd) {
+void Page::makingDrink(map<int, int> &orderd, int level) {
+    if (level > 5)
+        level = 5;
     frame();
-    vector<string> coffeeName = {"아메리카노", "카페라뗴",   "홍차",
-                                 "카페모카",   "레몬에이드", "카라멜마끼아또"};
-    map<int, int>::iterator iter;
     int i;
 
     Console::gotoXY(4, 3);
@@ -464,7 +475,7 @@ void Page::makingDrink(map<int, int> orderd) {
         Console::setBackground(LIGHTGRAY);
         Console::printColorString(temp.c_str(), MAGENTA);
         if (i % 2 == 1) {
-            Console::gotoXY(18, Console::y + 1);
+            Console::gotoXY(19, 4);
         }
     }
 
@@ -518,7 +529,44 @@ void Page::makingDrink(map<int, int> orderd) {
     Console::setBackground(LIGHTYELLOW);
     Console::printColorString("만들기!!", GRAY);
 
-    Console::gotoEnd();
+    //샷 재료 보이기
+    for (int i = 0; i < 3; i++) {
+        Console::gotoXY(6, 12 + (i * 2));
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[0][i].c_str(), MAGENTA);
+    }
+
+    //베이스 재료 보이기
+    for (int i = 0; i < 2; i++) {
+        Console::gotoXY(15, 12 + (i * 2));
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[1][i].c_str(), MAGENTA);
+    }
+
+    if (level > 3) {
+        Console::gotoXY(15, 16);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[1][2].c_str(), MAGENTA);
+    }
+
+    //시럽 재료 보이기
+    for (int i = 0; i < level - 2; i++) {
+        Console::gotoXY(26, 12 + (i * 2));
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[2][i].c_str(), MAGENTA);
+    }
+
+    //기타 재료 보이기
+    for (int i = 0; i < level - 2; i++) {
+        Console::gotoXY(37, 12 + (i * 2));
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[3][i].c_str(), MAGENTA);
+    }
+
+    //커서색 변경하기
+    Console::gotoXY(4, 12);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(">", RED);
 }
 
 void Page::workingPage2() {
