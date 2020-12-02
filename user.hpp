@@ -23,7 +23,8 @@ class User {
     int curEx; // 현제 성취도
 
   public:
-    User(string _name = "User");
+    User(string _name); //임시
+    // sUser(Data &data);
     User(User &user);
     string getName() { return name; }
     int getlevel() { return level; }

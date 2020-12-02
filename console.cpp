@@ -7,6 +7,9 @@
 #define WIDTH 65
 #define HEIGHT 25
 
+int Console::x;
+int Console::y;
+
 int Console::linux_getch(void) {
     int ch;
     struct termios buf, save;
@@ -45,8 +48,10 @@ const char *Console::input(int mode, int maxsize) {
     return ch;
 }
 
-void Console::gotoXY(int x, int y) {
-    printf("\033[%d;%df", y, x);
+void Console::gotoXY(int _x, int _y) {
+    x = _x;
+    y = _y;
+    printf("\033[%d;%df", _y, _x);
     fflush(stdout);
 }
 
@@ -66,3 +71,10 @@ void Console::printDot(int x, int y, int color) {
 }
 
 void Console::gotoEnd() { gotoXY(1, HEIGHT + 1); }
+
+void Console::drawCursor(int _x, int _y, int backColor, int color) {
+    backColor += 10;
+    printf("\033[%dm\b ", backColor);
+    gotoXY(_x, _y);
+    printf("\033[%dm>", color);
+}
