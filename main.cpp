@@ -18,7 +18,9 @@ int main() {
     // page.makingDrink();
     // page.workingPage2();
     // page.workingPage3();
-    page.workingPage4();
+    // page.workingPage4();
+    page.ranking();
+    // page.minigame();
 
     // Data data;
 
