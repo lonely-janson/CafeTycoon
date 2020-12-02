@@ -8,6 +8,9 @@
 
 using namespace std;
 
+int slectX = 4;
+int selectY = 12;
+
 class Data {
   private:
     string username;
