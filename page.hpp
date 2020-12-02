@@ -22,11 +22,13 @@ class Page {
     void workingPage2();
     void workingPage3();
     void workingPage4();
+
     void ranking();
-    void minigame1(); //고르기
-    void minigame2(); //대결
+    void minigame1(); //게임 대화상자 - 시작 및 설명
+    void minigame2(); //고르기 및 대결
     void minigame3(); //이김
     void minigame4(); //짐
+    void minigame5(); //비김
     void finish();
 };
 

@@ -24,7 +24,8 @@ int main() {
     // page.minigame2();
     // page.minigame3();
     // page.minigame4();
-    page.finish();
+    page.minigame5();
+    // page.finish();
 
     // Data data;
 
