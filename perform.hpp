@@ -1,9 +1,10 @@
 #ifndef __PERFORM_HPP__
 #define __PERFORM_HPP__
 
+#include "page.hpp"
 #include "user.hpp"
-#include <string>
-#include <vector>
+
+#define MAX_SIZE 12
 
 using namespace std;
 
@@ -11,6 +12,7 @@ class Data {
   private:
     string username;
     string dataPath;
+    string ranking;
 
   public:
     Data();
@@ -20,12 +22,6 @@ class Data {
 
 void gameover(int signum);
 void *showTime(void *);
-
-struct __MSG {
-    long type;
-    int data[2]; // 0 : 돈 , 1 : 판매잔수
-};
-typedef struct __MSG Msg;
 
 class Game {
   private:
@@ -50,12 +46,15 @@ class Game {
           lemonSyrup = 300,
           caramelSyrup = 500,
           blackTeaBag = 1000,
-          ice = 3s000,
+          ice = 3000,
           caramelDrizzle = 5000
       };*/
 
+    Page page;
+
   public:
-    // Game();
+    static int lastTime;
+    Game() { page = Page(); }
     void start(User &user);
 };
 
@@ -90,6 +89,22 @@ class Store {
     int printItem(int level);
     int buyItem(int cursor);
     int isMyItem(int cursor);
+};
+
+class Minigame {
+  private:
+    int user_money; // 사용자 소유 금액
+    int gamble_money;
+    double gamble_percent;
+
+  public:
+    Minigame();
+    int wantGame();
+    int startGame();
+    int wantBatting();
+    int sameGame(int random_num);
+    int winGame(int random_num);
+    int loseGame(int random_num);
 };
 
 #endif //__PERFORM_HPP__

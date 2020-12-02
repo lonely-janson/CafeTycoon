@@ -7,6 +7,11 @@
 using namespace std;
 
 int main() {
-;
+
+    Page page;
+
+    User user("SON");
+    Game game;
+    game.start(user);
     return 0;
 }
