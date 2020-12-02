@@ -12,7 +12,7 @@ int main() {
     // page.frame();
     // page.startPage();
     // page.login();
-    page.signUp();
+    // page.signUp();
     // page.mainPage();
     // page.workingPage1_day();
     // page.makingDrink();
@@ -26,6 +26,8 @@ int main() {
     // page.myInfo();
     // page.store();
     // page.showTimer();
+    // page.showRecipeButton();
+    page.showRecipe();
 
     // Data data;
 

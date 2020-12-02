@@ -1289,3 +1289,42 @@ void Page::showTimer() {
 
     Console::gotoEnd();
 }
+
+void Page::showRecipeButton() {
+    for (int i = 17; i < 29; i++)
+        for (int j = HEIGHT - 2; j <= HEIGHT - 1; j++)
+            Console::printDot(i, j, LIGHTYELLOW);
+    Console::gotoXY(17, HEIGHT - 2);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString(" CHECK", MAGENTA);
+    Console::gotoXY(22, HEIGHT - 1);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString("RECIPE", MAGENTA);
+
+    Console::gotoEnd();
+}
+
+void Page::showRecipe() {
+    frame();
+
+    for (int i = 5; i < 25; i++)
+        for (int j = 3; j < 6; j++) {
+            if (i == 5 || i == 24 || j == 3 || j == 5)
+                Console::printDot(i, j, LIGHTMAGENTA);
+            else
+                Console::printDot(i, j, LIGHTYELLOW);
+        }
+    Console::gotoXY(12, 4);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString("RECIPE", MAGENTA);
+
+    Console::gotoXY(55, HEIGHT - 2);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("GO BACK", MAGENTA);
+
+    Console::gotoXY(50, HEIGHT - 1);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("￣￣￣￣￣￣", MAGENTA);
+
+    Console::gotoEnd();
+}

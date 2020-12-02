@@ -29,6 +29,8 @@ class Page {
     void myInfo();
     void store();
     void showTimer();
+    void showRecipe();
+    void showRecipeButton();
 };
 
 #endif
