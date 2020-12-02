@@ -632,13 +632,13 @@ void Page::workingPage1_day(map<int, int> &orderd) {
     Console::gotoXY(27, 8);
     for (i = 0, iter = orderd.begin(); iter != orderd.end(); iter++, i++) {
         string temp = coffeeName[iter->first] + to_string(iter->second) + "잔 ";
-        Console::setBackground(LIGHTGRAY);
+        Console::setBackground(LIGHTBLUE);
         Console::printColorString(temp.c_str(), MAGENTA);
         if (i % 2 == 1) {
             Console::gotoXY(27, 10);
         }
     }
-    Console::setBackground(LIGHTGRAY);
+    Console::setBackground(LIGHTBLUE);
     Console::printColorString("\b 주세요", MAGENTA);
     for (int i = 26; i < 52; i++) {
         Console::printDot(i, 6, BLACK);

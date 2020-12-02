@@ -7,6 +7,9 @@
 #define WIDTH 65
 #define HEIGHT 25
 
+int Console::x;
+int Console::y;
+
 int Console::linux_getch(void) {
     int ch;
     struct termios buf, save;
@@ -46,6 +49,8 @@ const char *Console::input(int mode, int maxsize) {
 }
 
 void Console::gotoXY(int _x, int _y) {
+    x = _x;
+    y = _y;
     printf("\033[%d;%df", _y, _x);
     fflush(stdout);
 }

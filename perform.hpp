@@ -8,9 +8,6 @@
 
 using namespace std;
 
-int slectX = 4;
-int selectY = 12;
-
 class Data {
   private:
     string username;
@@ -56,6 +53,7 @@ class Game {
     Page page;
 
   public:
+    static int lastTime;
     Game() { page = Page(); }
     void start(User &user);
 };

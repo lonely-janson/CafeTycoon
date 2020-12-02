@@ -196,14 +196,12 @@ void gameOver(int signum) {
     exit(0);
 }
 
+int Game::lastTime = 100;
+
 void *showTime(void *) {
     for (int i = 0; i < 60; i++) {
         sleep(1);
-        Console::gotoXY(5, HEIGHT);
-        Console::setBackground(LIGHTMAGENTA);
-        Console::printColorString(to_string(i).c_str(), LIGHTYELLOW);
-
-        Console::gotoXY(selectX, selectY);
+        Game::lastTime--;
     }
 }
 
@@ -212,6 +210,7 @@ void Game::start(User &user) {
     key_t key;
     int id;
     int *shmaddr = NULL; // 0:금액, 1:잔수, 2:경험치
+    lastTime = 100;
 
     string checkShowRecipe;
 
@@ -238,6 +237,7 @@ void Game::start(User &user) {
         int numberOfType;     // 커피 종류 개수
         int kind;             // 커피 종류
         int showSelectY = 10;
+        int color;
 
         vector<string> coffeeName = {"아메리카노", "카페라뗴",
                                      "홍차",       "카페모카",
@@ -319,17 +319,23 @@ void Game::start(User &user) {
                 }
             }
 
-            // ------ 디자인 변경 필요 -----
+
+            color = LIGHTGRAY;
             //주문 정보 출력
-            page.workingPage1_day(orderd);
+            if (lastTime > 50) {
+                page.workingPage1_day(orderd);
+            } else {
+                page.workingPage1_night(orderd);
+            }
 
             // ------ 디자인 변경 필요 -----
             //레시피 출력 여부
-            cout << "Do you want show recepie? : ";
+            page.showRecipeButton();
             cin >> checkShowRecipe;
 
             if (checkShowRecipe == "y") {
                 // ------ 디자인 변경 필요 -----
+                page.showRecipe();
                 //레시피 출력
                 for (iter = orderd.begin(); iter != orderd.end(); iter++) {
                     switch (iter->first) {
@@ -357,7 +363,7 @@ void Game::start(User &user) {
                         break;
                     }
                 }
-                sleep(0); //보여주는 시간
+                sleep(10); //보여주는 시간
             }
 
             // ------ 디자인 변경 필요 -----
@@ -373,17 +379,17 @@ void Game::start(User &user) {
             Console::linux_getch(); //입력 버퍼에 남아있는 엔터키 제거
             //배열 초기화
 
-            int drinkingCount = 1;
+            int x = 4;
+            int y = 12;
+            int drinkingCount = 0;
             int syrupLevel = (level > 4) ? 4 : level;
             select = 1;
-            selectX = 4;
-            selectY = 12;
 
             iter = orderd.begin();
             for (int i = 0; iter != orderd.end(); iter++, i++) {
                 for (int j = 0; j < iter->second; j++) {
                     Console::gotoXY(26, 5);
-                    Console::setBackground(LIGHTGRAY);
+                    Console::setBackground(color);
                     Console::printColorString(coffeeName[iter->first].c_str(),
                                               MAGENTA);
 
@@ -392,10 +398,10 @@ void Game::start(User &user) {
                     drinkCountStr += to_string(totalCup) + ")";
                     drinkingCount++;
                     Console::gotoXY(58, 4);
-                    Console::setBackground(LIGHTGRAY);
+                    Console::setBackground(color);
                     Console::printColorString("      ", MAGENTA);
                     Console::gotoXY(58, 4);
-                    Console::setBackground(LIGHTGRAY);
+                    Console::setBackground(color);
                     Console::printColorString(drinkCountStr.c_str(), MAGENTA);
 
                     Console::gotoXY(5, 12);
@@ -416,90 +422,78 @@ void Game::start(User &user) {
                                 ch = Console::linux_getch();
                                 if (ch == 'A') {
                                     // UP
-                                    if (selectY > 12) {
+                                    if (y > 12) {
                                         //재료 라인
-                                        selectY -= 2;
-                                        if (selectX == 4)
+                                        y -= 2;
+                                        if (x == 4)
                                             select -= 2;
-                                        if (selectX == 14)
+                                        if (x == 14)
                                             select -= 20;
-                                        if (selectX == 25)
+                                        if (x == 25)
                                             select -= 200;
-                                        if (selectX == 36)
+                                        if (x == 36)
                                             select -= 2000;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
+                                        Console::drawCursor(x, y, color, RED);
                                     }
                                 } else if (ch == 'B') {
                                     // DOWN
-                                    if (selectX == 4 && selectY < 16) {
+                                    if (x == 4 && y < 16) {
                                         //재료 라인
-                                        selectY += 2;
+                                        y += 2;
                                         select += 2;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 14 &&
-                                               selectY < 14 + (level / 3) * 2) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 14 &&
+                                               y < 14 + (level / 3) * 2) {
                                         // 베이스 라인
-                                        selectY += 2;
+                                        y += 2;
                                         select += 20;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 25 &&
-                                               selectY <
-                                                   12 + (syrupLevel - 2) * 2) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 25 &&
+                                               y < 12 + (syrupLevel - 2) * 2) {
                                         // 시럽 라인
-                                        selectY += 2;
+                                        y += 2;
                                         select += 200;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 36 &&
-                                               selectY < 12 + (level - 3) * 2) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 36 &&
+                                               y < 12 + (level - 3) * 2) {
                                         // 재료 라인
-                                        selectY += 2;
+                                        y += 2;
                                         select += 2000;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
+                                        Console::drawCursor(x, y, color, RED);
                                     }
                                 } else if (ch == 'C') { // RIGHT
-                                    if (selectX == 4) {
+                                    if (x == 4) {
                                         //샷 라인
-                                        selectX = 14;
+                                        x = 14;
                                         select *= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 14) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 14) {
                                         //베이스 라인
-                                        selectX = 25;
+                                        x = 25;
                                         select *= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 25) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 25) {
                                         //시럽 라인
-                                        selectX = 36;
+                                        x = 36;
                                         select *= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
+                                        Console::drawCursor(x, y, color, RED);
                                     }
                                 } else if (ch == 'D') { // LEFT
-                                    if (selectX == 14) {
+                                    if (x == 14) {
                                         //샷 라인
-                                        selectX = 4;
+                                        x = 4;
                                         select /= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 25) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 25) {
                                         //베이스 라인
-                                        selectX = 14;
+                                        x = 14;
                                         select /= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
-                                    } else if (selectX == 36) {
+                                        Console::drawCursor(x, y, color, RED);
+                                    } else if (x == 36) {
                                         //시럽 라인
-                                        selectX = 25;
+                                        x = 25;
                                         select /= 10;
-                                        Console::drawCursor(selectX, selectY,
-                                                            LIGHTGRAY, RED);
+                                        Console::drawCursor(x, y, color, RED);
                                     }
                                 }
                             }
@@ -507,25 +501,25 @@ void Game::start(User &user) {
 
                         if (ch == 'y') {
                             //커서 지우기
-                            Console::drawCursor(4, 12, LIGHTGRAY, RED);
+                            Console::drawCursor(4, 12, color, RED);
 
                             // 선택된 재료 글씨 지우기
                             for (int i = 10; i < showSelectY; i++) {
                                 Console::gotoXY(50, i);
-                                Console::setBackground(LIGHTGRAY);
+                                Console::setBackground(color);
                                 Console::printColorString("            ");
                             }
 
                             // 현제 재조 중인 글씨 지우기
                             Console::gotoXY(26, 5);
-                            Console::setBackground(LIGHTGRAY);
+                            Console::setBackground(color);
                             Console::printColorString("             ");
                             //선택된 재료 초기화
                             showSelectY = 10;
                             select = 1;
                             //좌표 초기화
-                            selectX = 4;
-                            selectY = 12;
+                            x = 4;
+                            y = 12;
 
                             //커피만들기
                             makeCoffee[i][j] = selectIngerdients;
@@ -540,9 +534,8 @@ void Game::start(User &user) {
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
-                                Console::gotoXY(selectX, selectY);
-                                Console::drawCursor(selectX, selectY, LIGHTGRAY,
-                                                    RED);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, color, RED);
                             }
                         } else if (select % 100 != 0) {
                             //베이스 라인
@@ -551,9 +544,8 @@ void Game::start(User &user) {
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
-                                Console::gotoXY(selectX, selectY);
-                                Console::drawCursor(selectX, selectY, LIGHTGRAY,
-                                                    RED);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, color, RED);
                             }
                         } else if (select % 1000 != 0) {
                             //시럽 라인
@@ -562,9 +554,8 @@ void Game::start(User &user) {
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
-                                Console::gotoXY(selectX, selectY);
-                                Console::drawCursor(selectX, selectY, LIGHTGRAY,
-                                                    RED);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, color, RED);
                             }
                         } else if (select % 10000 != 0) {
                             //재료 라인
@@ -573,9 +564,8 @@ void Game::start(User &user) {
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
-                                Console::gotoXY(selectX, selectY);
-                                Console::drawCursor(selectX, selectY, LIGHTGRAY,
-                                                    RED);
+                                Console::gotoXY(x, y);
+                                Console::drawCursor(x, y, color, RED);
                             }
                         }
                     }

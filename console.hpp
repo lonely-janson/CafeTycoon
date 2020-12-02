@@ -33,13 +33,15 @@ using namespace std;
 
 class Console {
   private:
-  public:
     static int x;
     static int y;
+
+  public:
     static int linux_getch(void);
     static int getX() { return x; }   // 현재 x 좌표
     static int getY() { return y; }   // 현재 y 좌표
     static void gotoXY(int x, int y); // x,y 좌표 변경
+    static void tempGotoXY(int _x, int _y);
     static void gotoEnd();
     static void
     printColorString(const char *str,
