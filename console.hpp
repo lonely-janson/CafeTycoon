@@ -37,8 +37,8 @@ class Console {
     static int x;
     static int y;
     static int linux_getch(void);
-    static int getX() { return x; }   // 현제 x 좌표
-    static int getY() { return y; }   // 현제 y 좌표
+    static int getX() { return x; }   // 현재 x 좌표
+    static int getY() { return y; }   // 현재 y 좌표
     static void gotoXY(int x, int y); // x,y 좌표 변경
     static void gotoEnd();
     static void
