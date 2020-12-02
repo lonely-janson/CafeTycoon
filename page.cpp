@@ -138,6 +138,8 @@ void Page::startPage() {
     Console::gotoEnd();
 }
 
+//아이디 치는 곳 (30, 10) - 30보다 좀더 띄워도 ㄱㅊ을듯 / 비번치는곳 (30,16) -
+//얘도 sign up 글자 앞 좌표 (13,22) / login 글자 앞 좌표 (45,22)
 void Page::login() {
     frame();
 
@@ -195,6 +197,8 @@ void Page::login() {
     Console::gotoEnd();
 }
 
+//아이디 치는 곳 (33,13) / 비번 (33,15) / 비번 확인 (33,17) / sign up 글자 앞
+//좌표 (28, 21)
 void Page::signUp() {
     frame();
     // s
@@ -457,6 +461,8 @@ void Page::mainPage() {
     Console::gotoEnd();
 }
 
+//샷 칸 첫번째 좌표 (5,12) / 베이스 칸 첫번째 (15,12) / 시럽 칸 첫번째 (26,12) /
+//재료 칸 첫번째 (37,12) 선택된 자료 첫번째 자료 좌표 (51,10)
 void Page::makingDrink(map<int, int> &orderd, int level) {
     if (level > 5)
         level = 5;
@@ -640,12 +646,12 @@ void Page::workingPage1_day(map<int, int> &orderd) {
     }
     Console::setBackground(LIGHTBLUE);
     Console::printColorString("\b 주세요", MAGENTA);
-    for (int i = 26; i < 52; i++) {
+    for (int i = 26; i < 62; i++) {
         Console::printDot(i, 6, BLACK);
         Console::printDot(i, 14, BLACK);
     }
     for (int i = 6; i < 15; i++)
-        Console::printDot(52, i, BLACK);
+        Console::printDot(61, i, BLACK);
 
     Console::gotoEnd();
 }
@@ -709,6 +715,7 @@ void Page::workingPage2_day() {
     Console::gotoEnd();
 }
 
+//말풍선 시작 좌표 (25,6)
 void Page::workingPage3_day() {
     frame();
 
@@ -799,9 +806,14 @@ void Page::workingPage3_day() {
     for (int i = 4; i < 10; i++)
         Console::printDot(46, i, BLACK);
 
+    Console::gotoXY(18, 20);
+    Console::setBackground(GRAY);
+    Console::printColorString("-- 계속하려면 ENTER --");
+
     Console::gotoEnd();
 }
 
+//말풍선 시작 좌표 (25,6)
 void Page::workingPage4_day() {
     frame();
 
@@ -891,6 +903,10 @@ void Page::workingPage4_day() {
     for (int i = 4; i < 10; i++)
         Console::printDot(46, i, BLACK);
 
+    Console::gotoXY(18, 20);
+    Console::setBackground(GRAY);
+    Console::printColorString("-- 계속하려면 ENTER --");
+
     Console::gotoEnd();
 }
 
@@ -967,12 +983,12 @@ void Page::workingPage1_night(map<int, int> &orderd) {
     }
     Console::setBackground(LIGHTGRAY);
     Console::printColorString("\b 주세요", MAGENTA);
-    for (int i = 26; i < 52; i++) {
+    for (int i = 26; i < 62; i++) {
         Console::printDot(i, 6, BLACK);
         Console::printDot(i, 14, BLACK);
     }
     for (int i = 6; i < 15; i++)
-        Console::printDot(52, i, BLACK);
+        Console::printDot(61, i, BLACK);
 
     Console::gotoEnd();
 }
@@ -1036,6 +1052,7 @@ void Page::workingPage2_night() {
     Console::gotoEnd();
 }
 
+//말풍선 시작 좌표 (25,6)
 void Page::workingPage3_night() {
     frame();
 
@@ -1126,9 +1143,14 @@ void Page::workingPage3_night() {
     for (int i = 4; i < 10; i++)
         Console::printDot(46, i, LIGHTGRAY);
 
+    Console::gotoXY(18, 20);
+    Console::setBackground(BLACK);
+    Console::printColorString("-- 계속하려면 ENTER --");
+
     Console::gotoEnd();
 }
 
+//말풍선 시작 좌표 (25,6)
 void Page::workingPage4_night() {
     frame();
 
@@ -1218,9 +1240,15 @@ void Page::workingPage4_night() {
     for (int i = 4; i < 10; i++)
         Console::printDot(46, i, LIGHTGRAY);
 
+    Console::gotoXY(18, 20);
+    Console::setBackground(BLACK);
+    Console::printColorString("-- 계속하려면 ENTER --");
+
     Console::gotoEnd();
 }
 
+//이름 출력할 좌표 (40,10) / 레벨 (40,12) / 성취도 (40,14) / 습득 레시피 (40,16)
+/// 소유금 (40,18) / 판매 잔수 (40,20)
 void Page::myInfo() {
     frame();
     // m
@@ -1298,6 +1326,8 @@ void Page::myInfo() {
     Console::gotoEnd();
 }
 
+//홍차, 레몬, 카페모카, 카라멜 마끼야또 순서대로 글자 시작 좌표 (15,13),
+//(15,15), (15,17), (15,19)
 void Page::store() {
     frame();
     // s
@@ -1362,6 +1392,7 @@ void Page::store() {
     Console::gotoEnd();
 }
 
+//시간 출력 하는 위치 시작 좌표 (5,HEIGHT)
 void Page::showTimer() {
     for (int i = 1; i < 15; i++) {
         for (int j = HEIGHT - 2; j <= HEIGHT; j++)
@@ -1380,20 +1411,22 @@ void Page::showTimer() {
     Console::gotoEnd();
 }
 
+// yes 앞 좌표 (16,HEIGHT-1) / no 앞 좌표 (26,HEIGHT-1)
 void Page::showRecipeButton() {
-    for (int i = 17; i < 29; i++)
+    for (int i = 17; i < 33; i++)
         for (int j = HEIGHT - 2; j <= HEIGHT - 1; j++)
             Console::printDot(i, j, LIGHTYELLOW);
     Console::gotoXY(17, HEIGHT - 2);
     Console::setBackground(LIGHTYELLOW);
-    Console::printColorString(" CHECK", MAGENTA);
-    Console::gotoXY(22, HEIGHT - 1);
+    Console::printColorString(" CHECK RECIPE?", MAGENTA);
+    Console::gotoXY(17, HEIGHT - 1);
     Console::setBackground(LIGHTYELLOW);
-    Console::printColorString("RECIPE", MAGENTA);
+    Console::printColorString("    yes   no", MAGENTA);
 
     Console::gotoEnd();
 }
 
+//글자 출력은 걍 적당히 좌표 잡아서ㄱㄱ / GO BACK 앞 좌표 (54, HEIGHT-2)
 void Page::showRecipe() {
     frame();
 
