@@ -27,6 +27,7 @@ class Page {
     void minigame2(); //대결
     void minigame3(); //이김
     void minigame4(); //짐
+    void finish();
 };
 
 #endif
