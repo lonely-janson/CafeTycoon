@@ -9,7 +9,7 @@
 class Page {
   private:
     int num;
-    // 현제 페이지 : 0 - 메인화면, 1 - 로그인창
+    // 현wo 페이지 : 0 - 메인화면, 1 - 로그인창
   public:
     void clear();
     void frame();
@@ -31,6 +31,12 @@ class Page {
     void showTimer();
     void showRecipe();
     void showRecipeButton();
+
+    void ranking();
+    void minigame1(); //고르기
+    void minigame2(); //대결
+    void minigame3(); //이김
+    void minigame4(); //짐
 };
 
 #endif
