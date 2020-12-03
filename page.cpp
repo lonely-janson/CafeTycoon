@@ -298,7 +298,7 @@ void Page::mainPage() {
         Console::printDot(i, 5, LIGHTYELLOW);
     Console::gotoXY(50, 10);
     Console::setBackground(LIGHTGRAY);
-    Console::printColorString("  STORE", GREEN);
+    Console::printColorString(" STORE", GREEN);
 
     // MY INFO
     for (int i = 50; i < 58; i++)
