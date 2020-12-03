@@ -14,11 +14,10 @@ class Page {
     // 현제 페이지 : 0 - 메인화면, 1 - 로그인창
     vector<string> coffeeName = {"아메리카노", "카페라뗴",   "홍차",
                                  "카페모카",   "레몬에이드", "카라멜마끼아또"};
-    vector<vector<string>> ingerdients = {
-        {"샷 1잔", "샷 2잔", "샷 3잔"},
-        {"물", "우유", "탄산수"},
-        {"모카", "레몬", "카라멜"},
-        {"홍차 티벡", "얼음", "드리즐"}};
+    vector<vector<string>> ingerdients = {{"샷 1잔", "샷 2잔", "샷 3잔"},
+                                          {"물", "우유", "탄산수"},
+                                          {"모카", "레몬", "카라멜"},
+                                          {"홍차 티벡", "얼음", "드리즐"}};
 
     map<int, int>::iterator iter;
 
@@ -47,10 +46,12 @@ class Page {
     void showRecipeButton();
 
     void ranking();
-    void minigame1(); //고르기
-    void minigame2(); //대결
+    void minigame1(); //게임 대화상자 - 시작 및 설명
+    void minigame2(); //고르기 및 대결
     void minigame3(); //이김
     void minigame4(); //짐
+    void minigame5(); //비김
+    void finish();
 };
 
 #endif

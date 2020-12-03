@@ -13,15 +13,6 @@ int main() {
     User user("SON");
     Store store(page);
 
-    // page.startPage();
-    // while (1)
-    //     if (Console::linux_getch() == ENTER)
-    //         break;
-    // page.login();
-
-    // while (1)
-    //     if (Console::linux_getch() == ENTER)
-    //         break;
     page.mainPage();
     char ch;
     x = 11;
