@@ -8,10 +8,13 @@ using namespace std;
 
 int main() {
 
-    Page page;
+    /*Page page;
 
     User user("SON");
     Game game;
-    game.start(user);
+    game.start(user);*/
+
+    Page page;
+    page.login();
     return 0;
 }
