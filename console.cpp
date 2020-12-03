@@ -72,7 +72,7 @@ void Console::printDot(int x, int y, int color) {
 
 void Console::gotoEnd() { gotoXY(1, HEIGHT + 1); }
 
-void Console::drawCursor(int _x, int _y, int backColor, int color) {
+void Console::drawCursor(int _x, int _y, int color, int backColor) {
     backColor += 10;
     printf("\033[%dm\b ", backColor);
     gotoXY(_x, _y);

@@ -6,6 +6,16 @@
 
 using namespace std;
 
+class Data {
+  public:
+    string username;
+    string dataPath;
+
+    Data();
+    bool signUp(); //회원가입
+    bool signIn(); //로그인
+};
+
 class User {
   private:
     string name;   // 사용자 이름
@@ -24,7 +34,7 @@ class User {
 
   public:
     User(string _name); //임시
-    // sUser(Data &data);
+    // User(Data &data);
     User(User &user);
     string getName() { return name; }
     int getlevel() { return level; }

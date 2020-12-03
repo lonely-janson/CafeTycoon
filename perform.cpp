@@ -2,11 +2,9 @@
 #include "console.hpp"
 #include "user.hpp"
 #include <cstring>
-#include <fcntl.h>
 #include <iostream>
 #include <map>
 #include <pthread.h>
-#include <pwd.h>
 #include <queue>
 #include <random>
 #include <signal.h>
@@ -14,180 +12,11 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <wait.h>
 
 using namespace std;
-
-#define PERMS 0755
-
-Data::Data() {
-
-    struct passwd *info;
-
-    if (((info = getpwuid(getuid())) == NULL)) {
-        perror("getpwuid() error!");
-        exit(-1);
-    }
-
-    dataPath = "/home/";
-    dataPath += info->pw_name;
-    dataPath += "/Data/";
-
-    if (access(dataPath.c_str(), F_OK) == -1) {
-        //폴더가 존재하지 않을시;
-        if (mkdir(dataPath.c_str(), PERMS) == -1) {
-            perror("mkdir() error!");
-            exit(-2);
-        }
-    }
-
-    ranking = dataPath + "/ranking";
-    if (access(ranking.c_str(), F_OK) == -1) {
-        if (mkdir(ranking.c_str(), PERMS) == -1) {
-            perror("mkdir() error!");
-            exit(-2);
-        }
-    }
-}
-
-bool Data::signUp() {
-    string id;
-    string pw;
-    string userSell;
-    string userRanking;
-    string userLevel;
-
-    string pwPath;
-    string userRankingPath;
-    string userSellPath;
-    string userLevelPath;
-
-    int fd = 0;
-    ssize_t wsize;
-
-    // 아이디 입력
-    while (1) {
-        cout << "ID : ";
-        id = dataPath;
-        id += Console::input();
-
-        if (mkdir(id.c_str(), PERMS) == -1) {
-            cout << "already exiting id";
-        } else {
-            break;
-        }
-    }
-
-    // 비밀번호 입력
-    cout << "PW : ";
-    pw = Console::input(1);
-    pwPath = id + "/pw.dat";
-
-    fd = open(pwPath.c_str(), O_CREAT | O_WRONLY, PERMS);
-    if (fd == -1) {
-        cout << "Sign Up error please Retry";
-        perror("open() error!");
-        rmdir(id.c_str());
-        return false;
-    }
-
-    wsize = write(fd, (char *)pw.c_str(), pw.length());
-
-    close(fd);
-
-    if (wsize == -1) {
-        cout << "Sign Up error please Retry";
-        perror("write() error!");
-        remove(pwPath.c_str());
-        rmdir(id.c_str());
-        return false;
-    }
-
-    userRankingPath = ranking + "/user_id";
-    mkdir(userRankingPath.c_str(), 0644);
-
-    userSellPath = userRanking + "usersell.txt";
-    userSell = "0";
-    fd = open(userSellPath.c_str(), O_CREAT | O_TRUNC | O_RDWR, PERMS);
-    write(fd, (char *)userSell.c_str(), strlen(userSell.c_str()));
-
-    userLevelPath = userRanking + "userlevel.txt";
-    userLevel = "0";
-    fd = open(userLevelPath.c_str(), O_CREAT | O_TRUNC | O_RDWR, PERMS);
-    write(fd, (char *)userLevel.c_str(), strlen(userLevel.c_str()));
-
-    return true;
-}
-
-bool Data::signIn() {
-    string id;
-    string pw;
-    string originPw;
-    string pwPath;
-    char *temp;
-    int pwCount = 0;
-    int idCount = 0;
-
-    int fd = 0;
-    struct stat fileinfo;
-
-    // 아이디 입력
-    while (1) {
-        if (idCount++ > 5)
-            return false;
-        cout << "ID : ";
-        id = dataPath;
-        id += Console::input();
-
-        if (access(dataPath.c_str(), F_OK) != -1) {
-            //폴더가 존재할떄
-            break;
-        }
-    }
-
-    //비밀번호 불러오기;
-
-    pwPath = id + "/pw.dat";
-    fd = open(pwPath.c_str(), O_RDONLY);
-
-    if (fd == -1) {
-        cout << "Sign In error please Retry";
-        perror("open() error!");
-        return false;
-    }
-
-    if (fstat(fd, &fileinfo) == -1) {
-        cout << "Sign In error please Retry";
-        perror("fstat() error!");
-        return false;
-    }
-
-    temp = (char *)malloc(fileinfo.st_size);
-    if (read(fd, (char *)temp, fileinfo.st_size) == -1) {
-        cout << "Sign In error please Retry";
-        perror("read() error!");
-        return false;
-    }
-    originPw = temp;
-    close(fd);
-
-    //비밀번호 입력
-    while (1) {
-        if (pwCount++ > 5)
-            return false;
-
-        cout << "PW : ";
-        pw = Console::input(1);
-
-        if (pw == originPw)
-            break;
-    }
-
-    return true;
-}
 
 void gameOver(int signum) {
     int status;
@@ -319,7 +148,6 @@ void Game::start(User &user) {
                 }
             }
 
-
             color = LIGHTGRAY;
             //주문 정보 출력
             if (lastTime > 50) {
@@ -335,31 +163,44 @@ void Game::start(User &user) {
 
             if (checkShowRecipe == "y") {
                 // ------ 디자인 변경 필요 -----
+                int tempY = 8;
                 page.showRecipe();
+
                 //레시피 출력
                 for (iter = orderd.begin(); iter != orderd.end(); iter++) {
+                    Console::gotoXY(7, tempY++);
                     switch (iter->first) {
                     case 0:
-                        cout << "Americano : shot(2), water" << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString("아메리카노 : 샷2잔, 물\n",
+                                                  MAGENTA);
                         break;
                     case 1:
-                        cout << "Cafe Lattee : shot(2), milk" << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString("카페라뗴 : 샷2잔, 우유\n",
+                                                  MAGENTA);
                         break;
                     case 2:
-                        cout << "Cafe Lattee : black tea bag, water" << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString("홍차 : 홍차티벡, 물\n",
+                                                  MAGENTA);
                         break;
                     case 3:
-                        cout << "Cafe Mocha : mocha syrup, shot(2), milk "
-                             << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString(
+                            "카페모카 : 샷2잔, 물, 모카시럽\n", MAGENTA);
                         break;
                     case 4:
-                        cout << "Lemonade : shot(2), milk" << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString(
+                            "레몬에이드 : 탄산수, 레몬시럽, 얼음\n", MAGENTA);
                         break;
                     case 5:
-                        cout << "Carame Macchiato : caramel syrup, mikl, "
-                                "shot(2), "
-                                "carmel drizzle"
-                             << endl;
+                        Console::setBackground(LIGHTGRAY);
+                        Console::printColorString(
+                            "카라멜마키야또 : 샷2잔, 우유, 카라멜 시럽, 카라멜 "
+                            "드리즐\n",
+                            MAGENTA);
                         break;
                     }
                 }
@@ -433,7 +274,7 @@ void Game::start(User &user) {
                                             select -= 200;
                                         if (x == 36)
                                             select -= 2000;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     }
                                 } else if (ch == 'B') {
                                     // DOWN
@@ -441,59 +282,59 @@ void Game::start(User &user) {
                                         //재료 라인
                                         y += 2;
                                         select += 2;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 14 &&
                                                y < 14 + (level / 3) * 2) {
                                         // 베이스 라인
                                         y += 2;
                                         select += 20;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 25 &&
                                                y < 12 + (syrupLevel - 2) * 2) {
                                         // 시럽 라인
                                         y += 2;
                                         select += 200;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 36 &&
                                                y < 12 + (level - 3) * 2) {
                                         // 재료 라인
                                         y += 2;
                                         select += 2000;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     }
                                 } else if (ch == 'C') { // RIGHT
                                     if (x == 4) {
                                         //샷 라인
                                         x = 14;
                                         select *= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 14) {
                                         //베이스 라인
                                         x = 25;
                                         select *= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 25) {
                                         //시럽 라인
                                         x = 36;
                                         select *= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     }
                                 } else if (ch == 'D') { // LEFT
                                     if (x == 14) {
                                         //샷 라인
                                         x = 4;
                                         select /= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 25) {
                                         //베이스 라인
                                         x = 14;
                                         select /= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     } else if (x == 36) {
                                         //시럽 라인
                                         x = 25;
                                         select /= 10;
-                                        Console::drawCursor(x, y, color, RED);
+                                        Console::drawCursor(x, y, RED, color);
                                     }
                                 }
                             }
@@ -501,7 +342,7 @@ void Game::start(User &user) {
 
                         if (ch == 'y') {
                             //커서 지우기
-                            Console::drawCursor(4, 12, color, RED);
+                            Console::drawCursor(x, y, RED, color);
 
                             // 선택된 재료 글씨 지우기
                             for (int i = 10; i < showSelectY; i++) {
@@ -531,41 +372,45 @@ void Game::start(User &user) {
                             //샷 라인
                             if (selectIngerdients % 10 == 0) {
                                 selectIngerdients += select;
+                                Console::setBackground(color);
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
                                 Console::gotoXY(x, y);
-                                Console::drawCursor(x, y, color, RED);
+                                Console::drawCursor(x, y, RED, color);
                             }
                         } else if (select % 100 != 0) {
                             //베이스 라인
                             if ((selectIngerdients % 100) / 10 == 0) {
                                 selectIngerdients += select;
+                                Console::setBackground(color);
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
                                 Console::gotoXY(x, y);
-                                Console::drawCursor(x, y, color, RED);
+                                Console::drawCursor(x, y, RED, color);
                             }
                         } else if (select % 1000 != 0) {
                             //시럽 라인
                             if ((selectIngerdients % 1000) / 100 == 0) {
                                 selectIngerdients += select;
+                                Console::setBackground(color);
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
                                 Console::gotoXY(x, y);
-                                Console::drawCursor(x, y, color, RED);
+                                Console::drawCursor(x, y, RED, color);
                             }
                         } else if (select % 10000 != 0) {
                             //재료 라인
                             if ((selectIngerdients % 10000) / 1000 == 0) {
                                 selectIngerdients += select;
+                                Console::setBackground(color);
                                 Console::gotoXY(50, showSelectY++);
                                 Console::printColorString(inger[select].c_str(),
                                                           LIGHTMAGENTA);
                                 Console::gotoXY(x, y);
-                                Console::drawCursor(x, y, color, RED);
+                                Console::drawCursor(x, y, RED, color);
                             }
                         }
                     }
@@ -591,8 +436,17 @@ void Game::start(User &user) {
                 }
             }
 
-            (successOrfail) ? page.workingPage3_day() : page.workingPage4_day();
-
+            if (lastTime > 50) {
+                (successOrfail) ? page.workingPage3_day()
+                                : page.workingPage4_day();
+            } else {
+                (successOrfail) ? page.workingPage3_night()
+                                : page.workingPage4_night();
+            }
+            while (1) {
+                if (Console::linux_getch() == ENTER)
+                    break;
+            }
             //-----------test--------
             cout << "totalPrice : " << totalPrice
                  << ", countSell : " << totalCup << endl;
@@ -610,201 +464,243 @@ void Game::start(User &user) {
 }
 
 // Constructor
-Store::Store() {
-    int cursor; // 커서값이 있다고 생각하자
-    printItem(level);
+Store::Store(Page &_page) {
+    page = _page; // 커서값이 있다고 생각하자
 }
 
 //상점 품목 표시
 //커서 첫 위치 조정해야함
-int Store::printItem(int level) {
-    menu1 = access(path_menu1, F_OK);
-    menu2 = access(path_menu2, F_OK);
-    menu3 = access(path_menu3, F_OK);
-    menu4 = access(path_menu4, F_OK);
+int Store::printItem(User &user) {
 
-    if (menu1 == -1) { //구매기록없음
-        if (level >= lev_menu1) {
-            cout << "          1. 홍차" << endl;
+    Console::gotoXY(15, 11);
+    Console::setBackground(LIGHTGRAY);
+    if (user.getRecipe(2) == 0) { //구매기록없음
+        if (user.getlevel() >= level[0]) {
+            Console::printColorString("         1. 홍차             33000",
+                                      CYAN);
         } else {
-            cout << "[Locked]  1. 홍차 " << endl;
+            Console::printColorString("[Locked] 1. 홍차             33000",
+                                      CYAN);
         }
     } else { // 구매기록 있음
-        cout << " [Owned]  1. 홍차 " << endl;
+        Console::printColorString(" [Owned] 1. 홍차             33000", CYAN);
     }
-    cout << endl;
 
-    if (menu2 == -1) { //구매기록없음
-        if (level >= lev_menu2) {
-            cout << "          2. 레몬 에이드" << endl;
+    Console::gotoXY(15, 13);
+    Console::setBackground(LIGHTGRAY);
+    if (user.getRecipe(3) == 0) { //구매기록없음
+        if (user.getlevel() >= level[1]) {
+            Console::printColorString("         2. 레몬 에이드      55000",
+                                      YELLOW);
         } else {
-            cout << "[Locked]  2. 레몬 에이드 " << endl;
+            Console::printColorString(" [Locked] 2. 레몬 에이드      55000",
+                                      YELLOW);
         }
     } else { // 구매기록 있음
-        cout << " [Owned]  2. 레몬 에이드 " << endl;
+        Console::printColorString(" [Owned] 2. 레몬 에이드      55000", YELLOW);
     }
-    cout << endl;
 
-    if (menu3 == -1) { //구매기록없음
-        if (level >= lev_menu3) {
-            cout << "          3. 카페모카" << endl;
+    Console::gotoXY(15, 15);
+    Console::setBackground(LIGHTGRAY);
+    if (user.getRecipe(4) == 0) { //구매기록없음
+        if (user.getlevel() >= level[2]) {
+            Console::printColorString("        3. 카페모카          77000",
+                                      LIGHTRED);
         } else {
-            cout << "[Locked]  3. 카페모카 " << endl;
+            Console::printColorString("[Locked] 3. 카페모카         77000",
+                                      LIGHTRED);
         }
     } else { // 구매기록 있음
-        cout << " [Owned]  3. 카페모카 " << endl;
+        Console::printColorString(" [Owned] 3. 카페모카         77000",
+                                  LIGHTRED);
     }
-    cout << endl;
 
-    if (menu4 == -1) { //구매기록없음
-        if (level >= lev_menu4) {
-            cout << "          4. 카라멜 마키야또" << endl;
+    Console::gotoXY(15, 17);
+    Console::setBackground(LIGHTGRAY);
+    if (user.getRecipe(5) == 0) { //구매기록없음
+        if (user.getlevel() >= level[3]) {
+            Console::printColorString("         4. 카라멜 마끼야또  99000",
+                                      GREEN);
         } else {
-            cout << "[Locked]  4. 카라멜 마키야또" << endl;
+            Console::printColorString("[Locked] 4. 카라멜 마끼야또  99000",
+                                      GREEN);
         }
     } else { // 구매기록 있음
-        cout << " [Owned]  4. 카라멜 마키야또" << endl;
+        Console::printColorString(" [Owned] 4. 카라멜 마끼야또  99000", GREEN);
     }
-    cout << endl;
 
     return 0;
 }
 
-int Store::buyItem(int cursor) {
+int Store::buyItem(User &user) {
     // 레시피를 소유하고 있지 않음
-    switch (cursor) {
-    case 1:
-        if (level >= lev_menu1 && money >= cost_menu1) {
-            cout << "해당 레시피를 구매하시겠습니까? 잔액에서" << cost_menu1
-                 << "원이 차감됩니다." << endl;
-            cout << "구매하시려면 Enter 자판을 눌러주세요. 아니라면  왼쪽 "
-                    "방향키를 눌러주세요."
-                 << endl;
-            switch (cursor) {
-                int fd = 0;
+    int x = 13;
+    int y = 11;
+    char ch;
 
-                // case 1//"Enter": //엔터키가 눌렸을 때 - 수정 필요
-                //     fd = open(path_menu1, O_RDWR | O_CREAT);
-                //     if (fd == -1) {
-                //         perror("file open() error!");
-                //         exit(-1);
-                //     }
-                //     close(fd);
-                //     cout << "구매가 완료되었습니다." << endl;
-
-                // case 2//"왼쪽": // 왼쪽 방향키가 눌렸을 때
-                //     printItem(level);
+    while (1) {
+        Console::gotoXY(x, y);
+        Console::drawCursor(x, y, RED);
+        // 키보드 입력
+        while (1) { // 방향키 입력
+            ch = Console::linux_getch();
+            if (ch == ENTER) {
+                break;
+            } else if (ch == BACK) {
+                return 1;
+            } else {
+                Console::linux_getch();
+                ch = Console::linux_getch();
+                if (ch == 'A') {
+                    // UP
+                    if (y > 11) {
+                        y -= 2;
+                        Console::drawCursor(x, y, RED);
+                    }
+                } else if (ch == 'B') {
+                    // DOWN
+                    if (y < 17) {
+                        y += 2;
+                        Console::drawCursor(x, y, RED);
+                    }
+                }
             }
-        } else {
-            cout << "구매 조건이 충족되지 않았습니다. 상점 초기 화면으로 "
-                    "돌아갑니다."
-                 << endl;
-            printItem(level);
         }
-        break;
-    case 2:
-        if (level >= lev_menu2 && money >= cost_menu2) {
-            cout << "해당 레시피를 구매하시겠습니까? 잔액에서" << cost_menu1
-                 << "원이 차감됩니다." << endl;
-            cout << "구매하시려면 Enter 자판을 눌러주세요. 아니라면 "
-                    "방향키를 "
-                    "눌러주세요."
-                 << endl;
-            switch (cursor) {
-                int fd = 0;
-                // case "Enter": //엔터키가 눌렸을 때
-                //     fd = open(path_menu2, O_RDWR | O_CREAT);
-                //     if (fd == -1) {
-                //         perror("file open() error!");
-                //         exit(-1);
-                //     }
-                //     close(fd);
-                //     cout << "구매가 완료되었습니다." << endl;
 
-                // case "왼쪽": // 왼쪽 방향키가 눌렸을 때
-                //     printItem(level);
+        Console::setBackground(LIGHTGRAY);
+        switch (y) {
+        case 11:
+            if (user.getlevel() >= level[0] && user.getMoney() >= cost[0]) {
+                Console::gotoXY(17, 19);
+                string temp =
+                    "잔액에서" + to_string(cost[0]) + "원이 차감됩니다.";
+                Console::printColorString(temp.c_str(), BLACK);
+                Console::gotoXY(17, 21);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("구매하시려면 Enter을 눌러주세요.",
+                                          BLACK);
+                Console::gotoXY(17, 23);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("아니라면 ESC를 눌러주세요", BLACK);
+
+                ch = Console::linux_getch();
+                if (ch == ENTER) {
+                    ch = 'y';
+                    user.addMoney(-cost[0]);
+                } else if (ch == ESC)
+                    break;
+            } else {
+                Console::gotoXY(17, 19);
+                Console::printColorString("구매 조건이 충족되지 않았습니다.",
+                                          BLACK);
+                while (Console::linux_getch() != ENTER) {
+                };
             }
-        } else {
-            cout << "구매 조건이 충족되지 않았습니다. 상점 초기 화면으로 "
-                    "돌아갑니다."
-                 << endl;
-            printItem(level);
-        }
-        break;
-    case 3:
-        if (level >= lev_menu3 && money >= cost_menu3) {
-            cout << "해당 레시피를 구매하시겠습니까? 잔액에서" << cost_menu1
-                 << "원이 차감됩니다." << endl;
-            cout << "구매하시려면 Enter 자판을 눌러주세요. 아니라면 "
-                    "방향키를 "
-                    "눌러주세요."
-                 << endl;
-            switch (cursor) {
-                int fd = 0;
-                // case "Enter": //엔터키가 눌렸을 때
-                //     fd = open(path_menu3, O_RDWR | O_CREAT);
-                //     if (fd == -1) {
-                //         perror("file open() error!");
-                //         exit(-1);
-                //     }
-                //     close(fd);
-                //     cout << "구매가 완료되었습니다." << endl;
+            break;
+        case 13:
+            if (user.getlevel() >= level[1] && user.getMoney() >= cost[1]) {
+                Console::gotoXY(17, 19);
+                string temp =
+                    "잔액에서" + to_string(cost[1]) + "원이 차감됩니다.";
+                Console::printColorString(temp.c_str(), BLACK);
+                Console::gotoXY(17, 21);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("구매하시려면 Enter을 눌러주세요.",
+                                          BLACK);
+                Console::gotoXY(17, 23);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("아니라면 ESC를 눌러주세요", BLACK);
 
-                // case "왼쪽": // 왼쪽 방향키가 눌렸을 때
-                //     printItem(level);
+                ch = Console::linux_getch();
+                if (ch == ENTER) {
+                    ch = 'y';
+                    user.addMoney(-cost[1]);
+                } else if (ch == ESC)
+                    break;
+            } else {
+                Console::gotoXY(17, 19);
+                Console::printColorString("구매 조건이 충족되지 않았습니다.",
+                                          BLACK);
+                while (Console::linux_getch() != ENTER) {
+                };
             }
-        } else {
-            cout << "구매 조건이 충족되지 않았습니다. 상점 초기 화면으로 "
-                    "돌아갑니다."
-                 << endl;
-            printItem(level);
-        }
-        break;
-    case 4:
-        if (level >= lev_menu3 && money >= cost_menu3) {
-            cout << "해당 레시피를 구매하시겠습니까? 잔액에서" << cost_menu1
-                 << "원이 차감됩니다." << endl;
-            cout << "구매하시려면 Enter 자판을 눌러주세요. 아니라면 "
-                    "방향키를 "
-                    "눌러주세요."
-                 << endl;
-            switch (cursor) {
-                int fd = 0;
+            break;
+        case 15:
+            if (user.getlevel() >= level[2] && user.getMoney() >= cost[2]) {
+                Console::gotoXY(17, 19);
+                string temp =
+                    "잔액에서" + to_string(cost[2]) + "원이 차감됩니다.";
+                Console::printColorString(temp.c_str(), BLACK);
+                Console::gotoXY(17, 21);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString(
+                    "구매하시려면 Enter 자판을 눌러주세요.", BLACK);
+                Console::gotoXY(17, 23);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("아니라면 ESC를 눌러주세요", BLACK);
 
-                // case "Enter": //엔터키가 눌렸을 때
-                //     fd = open(path_menu4, O_RDWR | O_CREAT);
-                //     if (fd == -1) {
-                //         perror("file open() error!");
-                //         exit(-1);
-                //     }
-                //     close(fd);
-                //     cout << "구매가 완료되었습니다." << endl;
-
-                // case "왼쪽": // 왼쪽 방향키가 눌렸을 때
-                //     printItem(level);
+                ch = Console::linux_getch();
+                if (ch == ENTER) {
+                    ch = 'y';
+                    user.addMoney(-cost[2]);
+                } else if (ch == ESC)
+                    break;
+            } else {
+                Console::gotoXY(17, 19);
+                Console::printColorString("구매 조건이 충족되지 않았습니다.",
+                                          BLACK);
+                while (Console::linux_getch() != ENTER) {
+                };
             }
-        } else {
-            cout << "구매 조건이 충족되지 않았습니다. 상점 초기 화면으로 "
-                    "돌아갑니다."
-                 << endl;
-            printItem(level);
+            break;
+        case 17:
+            if (user.getlevel() >= level[3] && user.getMoney() >= cost[3]) {
+                Console::gotoXY(17, 19);
+                string temp =
+                    "잔액에서" + to_string(cost[3]) + "원이 차감됩니다.";
+                Console::printColorString(temp.c_str(), BLACK);
+                Console::gotoXY(17, 21);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString(
+                    "구매하시려면 Enter 자판을 눌러주세요.", BLACK);
+                Console::gotoXY(17, 23);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString("아니라면 ESC를 눌러주세요", BLACK);
+
+                ch = Console::linux_getch();
+                if (ch == ENTER) {
+                    ch = 'y';
+                    user.addMoney(-cost[3]);
+                } else if (ch == ESC)
+                    break;
+
+            } else {
+                Console::gotoXY(17, 19);
+                Console::printColorString("구매 조건이 충족되지 않았습니다.",
+                                          BLACK);
+                while (Console::linux_getch() != ENTER) {
+                };
+            }
+            break;
         }
-        break;
+
+        //지우기
+        Console::gotoXY(17, 19);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("                                 ", BLACK);
+        Console::gotoXY(17, 21);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("                                   ", BLACK);
+        Console::gotoXY(17, 23);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("                                 ", BLACK);
+        if (ch == 'y')
+            break;
     }
-
-    // 샀다는 거 반환해야함 (벡터나 배열에 넣어주자) -> 깃허브 CafeTycoon에
-    // 올라온 User 파일을 보았더니 recipe라는 벡터로 저장하는 것으로
-    // 보였으나 왜 길이가 2이지,,? 라는 생각이 들어서 어떻게 쓰려고 만든
-    // 벡터인지 모르겠음 다시 display 함수 호출해야하는지 첫화면으로
-    // 돌아가는지 모르겠음
+    return 0;
 }
 
-Minigame::Minigame() {
-
-    int cursor;
-
-    wantGame();
-}
+Minigame::Minigame() { wantGame(); }
 //미니게임 UI 출력
 
 // 그럼 나는 선택해야할 거야

@@ -1343,22 +1343,6 @@ void Page::store() {
     for (int i = 5; i < WIDTH - 3; i++)
         Console::printDot(i, 9, MAGENTA);
 
-    Console::gotoXY(15, 13);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("1. 홍차", CYAN);
-
-    Console::gotoXY(15, 15);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("2. 레몬", YELLOW);
-
-    Console::gotoXY(15, 17);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("3. 카페모카", LIGHTRED);
-
-    Console::gotoXY(15, 19);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("4. 카라멜 마끼야또", GREEN);
-
     Console::gotoEnd();
 }
 

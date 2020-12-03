@@ -17,7 +17,7 @@ class Page {
     vector<vector<string>> ingerdients = {
         {"샷 1잔", "샷 2잔", "샷 3잔"},
         {"물", "우유", "탄산수"},
-        {"모카시럽", "레몬시럽", "카라멜시럽"},
+        {"모카", "레몬", "카라멜"},
         {"홍차 티벡", "얼음", "드리즐"}};
 
     map<int, int>::iterator iter;
