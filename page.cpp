@@ -78,62 +78,73 @@ void Page::startPage() {
     for (int i = 29; i < 32; i++)
         Console::printDot(i, 9, LIGHTGRAY);
     // t
-    Console::printDot(15, 16, LIGHTGRAY);
+    Console::printDot(15, 14, LIGHTGRAY);
     for (int i = 16; i < 20; i++)
-        Console::printDot(i, 16, LIGHTGRAY);
-    for (int i = 17; i < 21; i++)
+        Console::printDot(i, 14, LIGHTGRAY);
+    for (int i = 15; i < 19; i++)
         Console::printDot(17, i, LIGHTGRAY);
     // y
+    Console::printDot(22, 14, LIGHTGRAY);
+    Console::printDot(22, 15, LIGHTGRAY);
     Console::printDot(22, 16, LIGHTGRAY);
-    Console::printDot(22, 17, LIGHTGRAY);
-    Console::printDot(22, 18, LIGHTGRAY);
-    Console::printDot(23, 18, LIGHTGRAY);
+    Console::printDot(23, 16, LIGHTGRAY);
+    Console::printDot(24, 16, LIGHTGRAY);
+    Console::printDot(24, 17, LIGHTGRAY);
     Console::printDot(24, 18, LIGHTGRAY);
-    Console::printDot(24, 19, LIGHTGRAY);
-    Console::printDot(24, 20, LIGHTGRAY);
-    Console::printDot(25, 18, LIGHTGRAY);
-    Console::printDot(26, 18, LIGHTGRAY);
-    Console::printDot(26, 17, LIGHTGRAY);
+    Console::printDot(25, 16, LIGHTGRAY);
     Console::printDot(26, 16, LIGHTGRAY);
+    Console::printDot(26, 15, LIGHTGRAY);
+    Console::printDot(26, 14, LIGHTGRAY);
     // c
-    Console::printDot(30, 16, LIGHTGRAY);
-    Console::printDot(31, 16, LIGHTGRAY);
+    Console::printDot(30, 14, LIGHTGRAY);
+    Console::printDot(31, 14, LIGHTGRAY);
+    Console::printDot(29, 15, LIGHTGRAY);
+    Console::printDot(29, 16, LIGHTGRAY);
     Console::printDot(29, 17, LIGHTGRAY);
-    Console::printDot(29, 18, LIGHTGRAY);
-    Console::printDot(29, 19, LIGHTGRAY);
-    Console::printDot(30, 20, LIGHTGRAY);
-    Console::printDot(31, 20, LIGHTGRAY);
+    Console::printDot(30, 18, LIGHTGRAY);
+    Console::printDot(31, 18, LIGHTGRAY);
     // o
-    Console::printDot(35, 16, LIGHTGRAY);
-    Console::printDot(36, 16, LIGHTGRAY);
+    Console::printDot(35, 14, LIGHTGRAY);
+    Console::printDot(36, 14, LIGHTGRAY);
+    Console::printDot(34, 15, LIGHTGRAY);
+    Console::printDot(34, 16, LIGHTGRAY);
     Console::printDot(34, 17, LIGHTGRAY);
-    Console::printDot(34, 18, LIGHTGRAY);
-    Console::printDot(34, 19, LIGHTGRAY);
-    Console::printDot(35, 20, LIGHTGRAY);
-    Console::printDot(36, 20, LIGHTGRAY);
-    Console::printDot(37, 19, LIGHTGRAY);
-    Console::printDot(37, 18, LIGHTGRAY);
+    Console::printDot(35, 18, LIGHTGRAY);
+    Console::printDot(36, 18, LIGHTGRAY);
     Console::printDot(37, 17, LIGHTGRAY);
+    Console::printDot(37, 16, LIGHTGRAY);
+    Console::printDot(37, 15, LIGHTGRAY);
     // o
-    Console::printDot(41, 16, LIGHTGRAY);
-    Console::printDot(42, 16, LIGHTGRAY);
+    Console::printDot(41, 14, LIGHTGRAY);
+    Console::printDot(42, 14, LIGHTGRAY);
+    Console::printDot(40, 15, LIGHTGRAY);
+    Console::printDot(40, 16, LIGHTGRAY);
     Console::printDot(40, 17, LIGHTGRAY);
-    Console::printDot(40, 18, LIGHTGRAY);
-    Console::printDot(40, 19, LIGHTGRAY);
-    Console::printDot(41, 20, LIGHTGRAY);
-    Console::printDot(42, 20, LIGHTGRAY);
-    Console::printDot(43, 19, LIGHTGRAY);
-    Console::printDot(43, 18, LIGHTGRAY);
+    Console::printDot(41, 18, LIGHTGRAY);
+    Console::printDot(42, 18, LIGHTGRAY);
     Console::printDot(43, 17, LIGHTGRAY);
+    Console::printDot(43, 16, LIGHTGRAY);
+    Console::printDot(43, 15, LIGHTGRAY);
     // n
-    for (int i = 16; i < 21; i++)
+    for (int i = 14; i < 19; i++)
         Console::printDot(46, i, LIGHTGRAY);
-    Console::printDot(47, 17, LIGHTGRAY);
-    Console::printDot(48, 18, LIGHTGRAY);
-    Console::printDot(49, 19, LIGHTGRAY);
-    Console::printDot(50, 20, LIGHTGRAY);
-    for (int i = 16; i < 21; i++)
+    Console::printDot(47, 15, LIGHTGRAY);
+    Console::printDot(48, 16, LIGHTGRAY);
+    Console::printDot(49, 17, LIGHTGRAY);
+    Console::printDot(50, 18, LIGHTGRAY);
+    for (int i = 14; i < 19; i++)
         Console::printDot(50, i, LIGHTGRAY);
+
+    // sign up | login
+    Console::gotoXY(14, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("SIGN UP", LIGHTGRAY);
+    Console::gotoXY(33, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("|", LIGHTGRAY);
+    Console::gotoXY(46, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("LOGIN", LIGHTGRAY);
 
     Console::gotoEnd();
 }
@@ -182,17 +193,6 @@ void Page::login() {
         Console::printDot(i, 11, GRAY);
         Console::printDot(i, 17, GRAY);
     }
-
-    // sign up | login
-    Console::gotoXY(14, 22);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("SIGN UP", LIGHTMAGENTA);
-    Console::gotoXY(33, 22);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("/", LIGHTMAGENTA);
-    Console::gotoXY(46, 22);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("LOGIN", LIGHTMAGENTA);
 
     Console::gotoEnd();
 }
