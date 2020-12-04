@@ -28,22 +28,42 @@ int Console::linux_getch(void) {
 const char *Console::input(int mode, int maxsize) {
     char *ch = new char[maxsize];
     int index = 0;
-
-    while (1) {
-        ch[index] = Console::linux_getch();
-        if (ch[index] == BACK) {
-            cout << "\b \b";
-            index--;
-        } else if (ch[index] == ENTER) {
-            cout << ch[index];
-            break;
-        } else if (index < maxsize) {
-            (mode == 0) ? cout << ch[index] : cout << '*';
-            index++;
+    printf("\033[%dm", BLACK);
+    fflush(stdout);
+    if (mode != 3) {
+        while (1) {
+            ch[index] = Console::linux_getch();
+            if (ch[index] == BACK) {
+                cout << "\b \b";
+                index--;
+            } else if (ch[index] == ENTER) {
+                cout << ch[index];
+                break;
+            } else if (index < maxsize) {
+                (mode == 0) ? cout << ch[index] : cout << '*';
+                index++;
+            }
+        }
+    } else {
+        while (1) {
+            ch[index] = Console::linux_getch();
+            if (ch[index] == BACK) {
+                cout << "\b \b";
+                index--;
+            } else if (ch[index] == ENTER) {
+                cout << ch[index];
+                break;
+            } else if (ch[index] >= '0' && ch[index] <= '9') {
+                if (index < maxsize) {
+                    cout << ch[index];
+                    index++;
+                }
+            }
         }
     }
 
     ch[index] = '\0';
+    printf("\033[0m");
 
     return ch;
 }
@@ -72,7 +92,7 @@ void Console::printDot(int x, int y, int color) {
 
 void Console::gotoEnd() { gotoXY(1, HEIGHT + 1); }
 
-void Console::drawCursor(int _x, int _y, int backColor, int color) {
+void Console::drawCursor(int _x, int _y, int color, int backColor) {
     backColor += 10;
     printf("\033[%dm\b ", backColor);
     gotoXY(_x, _y);

@@ -136,21 +136,26 @@ void Page::startPage() {
         Console::printDot(50, i, LIGHTGRAY);
 
     // sign up | login
-    Console::gotoXY(14, 22);
-    Console::setBackground(LIGHTMAGENTA);
-    Console::printColorString("SIGN UP", LIGHTGRAY);
-    Console::gotoXY(33, 22);
-    Console::setBackground(LIGHTMAGENTA);
-    Console::printColorString("|", LIGHTGRAY);
-    Console::gotoXY(46, 22);
+    Console::gotoXY(9, 22);
     Console::setBackground(LIGHTMAGENTA);
     Console::printColorString("LOGIN", LIGHTGRAY);
+    Console::gotoXY(22, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("|", LIGHTGRAY);
+    Console::gotoXY(30, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("SIGN UP", LIGHTGRAY);
+    Console::gotoXY(44, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("|", LIGHTGRAY);
+    Console::gotoXY(52, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("HELPER", LIGHTGRAY);
 
     Console::gotoEnd();
 }
 
-//아이디 치는 곳 (30, 10) - 30보다 좀더 띄워도 ㄱㅊ을듯 / 비번치는곳 (30,16) -
-//얘도 sign up 글자 앞 좌표 (13,22) / login 글자 앞 좌표 (45,22)
+//아이디 치는 곳 (30, 10) - 30보다 좀더 띄워도 ㄱㅊ을듯 / 비번치는곳 (30,16)
 void Page::login() {
     frame();
 
@@ -250,18 +255,6 @@ void Page::signUp() {
     for (int i = 5; i < WIDTH - 3; i++)
         Console::printDot(i, 9, MAGENTA);
 
-    Console::gotoXY(15, 13);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("ID       :", CYAN);
-
-    Console::gotoXY(15, 15);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("PW       :", MAGENTA);
-
-    Console::gotoXY(15, 17);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("PW AGAIN     :", LIGHTRED);
-
     for (int i = 23; i < 43; i++)
         for (int j = 20; j < 23; j++) {
             if (i == 23 || i == 42 || j == 20 || j == 22)
@@ -302,7 +295,7 @@ void Page::mainPage() {
         Console::printDot(i, 5, LIGHTYELLOW);
     Console::gotoXY(50, 10);
     Console::setBackground(LIGHTGRAY);
-    Console::printColorString("  STORE", GREEN);
+    Console::printColorString(" STORE", GREEN);
 
     // MY INFO
     for (int i = 50; i < 58; i++)
@@ -1299,30 +1292,6 @@ void Page::myInfo() {
     for (int i = 5; i < WIDTH - 3; i++)
         Console::printDot(i, 7, MAGENTA);
 
-    Console::gotoXY(10, 10);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 이름 ]                   ", CYAN);
-
-    Console::gotoXY(10, 12);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 레벨 ]                   ", MAGENTA);
-
-    Console::gotoXY(10, 14);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 성취도 ]                   ", YELLOW);
-
-    Console::gotoXY(10, 16);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 습득 레시피 ]                   ", GREEN);
-
-    Console::gotoXY(10, 18);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 소유금 ]                   ", LIGHTRED);
-
-    Console::gotoXY(10, 20);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("- [ 판매 잔수 ]                   ", GRAY);
-
     Console::gotoEnd();
 }
 
@@ -1372,22 +1341,6 @@ void Page::store() {
     }
     for (int i = 5; i < WIDTH - 3; i++)
         Console::printDot(i, 9, MAGENTA);
-
-    Console::gotoXY(15, 13);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("1. 홍차", CYAN);
-
-    Console::gotoXY(15, 15);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("2. 레몬", YELLOW);
-
-    Console::gotoXY(15, 17);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("3. 카페모카", LIGHTRED);
-
-    Console::gotoXY(15, 19);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("4. 카라멜 마끼야또", GREEN);
 
     Console::gotoEnd();
 }
@@ -1443,11 +1396,11 @@ void Page::showRecipe() {
 
     Console::gotoXY(55, HEIGHT - 2);
     Console::setBackground(LIGHTGRAY);
-    Console::printColorString("GO BACK", MAGENTA);
+    Console::printColorString("GO!!", MAGENTA);
 
     Console::gotoXY(50, HEIGHT - 1);
     Console::setBackground(LIGHTGRAY);
-    Console::printColorString("￣￣￣￣￣￣", MAGENTA);
+    Console::printColorString("￣￣￣", MAGENTA);
 
     Console::gotoEnd();
 }
@@ -1530,44 +1483,44 @@ void Page::ranking() {
     Console::printDot(44, 5, MAGENTA);
 
     // crown,,,왕관 같니,,,??어떤지 봐주겟니,,,??
-    Console::printDot(48, 7, YELLOW);
-    Console::printDot(49, 7, LIGHTCYAN);
-    Console::printDot(50, 7, YELLOW);
-    Console::printDot(51, 7, LIGHTCYAN);
-    Console::printDot(52, 7, YELLOW);
-    Console::printDot(53, 7, LIGHTCYAN);
-    Console::printDot(54, 7, YELLOW);
-    Console::printDot(55, 7, LIGHTCYAN);
-    Console::printDot(56, 7, YELLOW);
-    Console::printDot(57, 7, LIGHTCYAN);
-    Console::printDot(58, 7, YELLOW);
+    // Console::printDot(48, 7, YELLOW);
+    // Console::printDot(49, 7, LIGHTCYAN);
+    // Console::printDot(50, 7, YELLOW);
+    // Console::printDot(51, 7, LIGHTCYAN);
+    // Console::printDot(52, 7, YELLOW);
+    // Console::printDot(53, 7, LIGHTCYAN);
+    // Console::printDot(54, 7, YELLOW);
+    // Console::printDot(55, 7, LIGHTCYAN);
+    // Console::printDot(56, 7, YELLOW);
+    // Console::printDot(57, 7, LIGHTCYAN);
+    // Console::printDot(58, 7, YELLOW);
 
-    for (int i = 48; i < 59; i++) {
-        Console::printDot(i, 6, LIGHTYELLOW);
-    }
+    // for (int i = 48; i < 59; i++) {
+    //     Console::printDot(i, 6, LIGHTYELLOW);
+    // }
 
-    Console::printDot(53, 5, LIGHTRED);
-    Console::printDot(48, 5, LIGHTYELLOW);
-    Console::printDot(49, 5, LIGHTYELLOW);
-    Console::printDot(50, 5, LIGHTYELLOW);
-    Console::printDot(51, 5, LIGHTYELLOW);
-    Console::printDot(52, 5, LIGHTYELLOW);
-    Console::printDot(54, 5, LIGHTYELLOW);
-    Console::printDot(55, 5, LIGHTYELLOW);
-    Console::printDot(56, 5, LIGHTYELLOW);
-    Console::printDot(57, 5, LIGHTYELLOW);
-    Console::printDot(58, 5, LIGHTYELLOW);
+    // Console::printDot(53, 5, LIGHTRED);
+    // Console::printDot(48, 5, LIGHTYELLOW);
+    // Console::printDot(49, 5, LIGHTYELLOW);
+    // Console::printDot(50, 5, LIGHTYELLOW);
+    // Console::printDot(51, 5, LIGHTYELLOW);
+    // Console::printDot(52, 5, LIGHTYELLOW);
+    // Console::printDot(54, 5, LIGHTYELLOW);
+    // Console::printDot(55, 5, LIGHTYELLOW);
+    // Console::printDot(56, 5, LIGHTYELLOW);
+    // Console::printDot(57, 5, LIGHTYELLOW);
+    // Console::printDot(58, 5, LIGHTYELLOW);
 
-    Console::printDot(49, 4, LIGHTYELLOW);
-    Console::printDot(52, 4, LIGHTYELLOW);
-    Console::printDot(53, 4, LIGHTYELLOW);
-    Console::printDot(54, 4, LIGHTYELLOW);
-    Console::printDot(57, 4, LIGHTYELLOW);
+    // Console::printDot(49, 4, LIGHTYELLOW);
+    // Console::printDot(52, 4, LIGHTYELLOW);
+    // Console::printDot(53, 4, LIGHTYELLOW);
+    // Console::printDot(54, 4, LIGHTYELLOW);
+    // Console::printDot(57, 4, LIGHTYELLOW);
 
-    Console::printDot(53, 3, LIGHTYELLOW);
+    // Console::printDot(53, 3, LIGHTYELLOW);
 
     // coin,,,왕관이랑 동전이랑 뭐가 낫니,,,?
-    /*
+
     for (int j = 4; j < 7; j++) {
         for (int i = 50; i < 57; i++) {
             Console::printDot(i, j, LIGHTYELLOW);
@@ -1587,7 +1540,6 @@ void Page::ranking() {
     Console::printDot(57, 4, YELLOW);
     Console::printDot(58, 5, YELLOW);
     Console::printDot(57, 6, YELLOW);
-    */
 
     // rank box
     for (int i = 5; i < 62; i++) {
@@ -1710,7 +1662,7 @@ void Page::ranking() {
     Console::gotoEnd();
 }
 
-//묵찌빠 선택
+//게임 대화상자
 void Page::minigame1() {
     frame();
 
@@ -1809,18 +1761,141 @@ void Page::minigame1() {
     Console::setBackground(LIGHTGRAY);
     Console::printColorString("*", BLACK);
 
-    // select
-    Console::gotoXY(23, 9);
+    //대화상자
+    Console::gotoXY(21, 9);
     Console::setBackground(MAGENTA);
-    Console::printColorString(" ▶ 당신의 선택은!? ◀  ", LIGHTGRAY);
+    Console::printColorString(" ▶ READY FOR THE GAME ◀  ", LIGHTGRAY);
+
+    for (int i = 5; i < 62; i++) {
+        for (int j = 11; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
 
     Console::gotoEnd();
 }
 
-// pc와 대결
-/*
-void Page::minigame2() {}
-*/
+// int Minigame::startGame() - 고르기 및 대결
+void Page::minigame2() {
+    frame();
+
+    // player
+    for (int i = 3; i < 33; i++) {
+        for (int j = 3; j < 13; j++) {
+            Console::printDot(i, j, LIGHTRED);
+        }
+    }
+    for (int j = 4; j < 13; j++)
+        Console::printDot(33, j, LIGHTRED);
+    for (int j = 5; j < 13; j++)
+        Console::printDot(34, j, LIGHTRED);
+    for (int j = 6; j < 13; j++)
+        Console::printDot(35, j, LIGHTRED);
+    for (int j = 7; j < 13; j++)
+        Console::printDot(36, j, LIGHTRED);
+    for (int j = 8; j < 13; j++)
+        Console::printDot(37, j, LIGHTRED);
+    for (int j = 9; j < 13; j++)
+        Console::printDot(38, j, LIGHTRED);
+    for (int j = 10; j < 13; j++)
+        Console::printDot(39, j, LIGHTRED);
+    Console::printDot(40, 11, LIGHTRED);
+    Console::printDot(40, 12, LIGHTRED);
+    Console::printDot(41, 12, LIGHTRED);
+
+    Console::gotoXY(6, 5);
+    Console::setBackground(LIGHTRED);
+    Console::printColorString("1.가위 / 2.바위 / 3.보");
+    Console::gotoXY(6, 7);
+    Console::setBackground(LIGHTRED);
+    Console::printColorString("중 1개 선택 (숫자 입력)");
+
+    // pc
+    for (int i = 34; i < 64; i++) {
+        for (int j = 14; j < 24; j++) {
+            Console::printDot(i, j, BLUE);
+        }
+    }
+    for (int j = 15; j < 24; j++)
+        Console::printDot(33, j, BLUE);
+    for (int j = 16; j < 24; j++)
+        Console::printDot(32, j, BLUE);
+    for (int j = 17; j < 24; j++)
+        Console::printDot(31, j, BLUE);
+    for (int j = 18; j < 24; j++)
+        Console::printDot(30, j, BLUE);
+    for (int j = 19; j < 24; j++)
+        Console::printDot(29, j, BLUE);
+    for (int j = 20; j < 24; j++)
+        Console::printDot(28, j, BLUE);
+    for (int j = 21; j < 24; j++)
+        Console::printDot(27, j, BLUE);
+    Console::printDot(26, 22, BLUE);
+    Console::printDot(26, 23, BLUE);
+    Console::printDot(25, 23, BLUE);
+
+    // vs
+    for (int j = 9; j < 12; j++) {
+        Console::printDot(25, j, LIGHTYELLOW);
+        Console::printDot(31, j, LIGHTYELLOW);
+    }
+    Console::printDot(26, 9, YELLOW);
+    Console::printDot(26, 10, YELLOW);
+    Console::printDot(27, 11, YELLOW);
+    Console::printDot(27, 12, YELLOW);
+    Console::printDot(28, 13, YELLOW);
+    for (int j = 11; j < 14; j++) {
+        Console::printDot(26, j, LIGHTYELLOW);
+        Console::printDot(30, j, LIGHTYELLOW);
+    }
+    Console::printDot(32, 9, YELLOW);
+    Console::printDot(32, 10, YELLOW);
+    Console::printDot(32, 11, YELLOW);
+    Console::printDot(31, 12, YELLOW);
+    Console::printDot(31, 13, YELLOW);
+    Console::printDot(30, 14, YELLOW);
+    Console::printDot(29, 15, YELLOW);
+    for (int j = 13; j < 15; j++) {
+        Console::printDot(27, j, LIGHTYELLOW);
+        Console::printDot(29, j, LIGHTYELLOW);
+    }
+    Console::printDot(28, 14, LIGHTYELLOW);
+    Console::printDot(28, 15, LIGHTYELLOW);
+
+    for (int i = 35; i < 40; i++) {
+        Console::printDot(i, 9, LIGHTYELLOW);
+        Console::printDot(i, 12, LIGHTYELLOW);
+        Console::printDot(i, 15, LIGHTYELLOW);
+    }
+    Console::printDot(34, 10, LIGHTYELLOW);
+    Console::printDot(34, 11, LIGHTYELLOW);
+    Console::printDot(40, 10, LIGHTYELLOW);
+    Console::printDot(40, 13, LIGHTYELLOW);
+    Console::printDot(40, 14, LIGHTYELLOW);
+    Console::printDot(34, 14, LIGHTYELLOW);
+    Console::printDot(35, 10, YELLOW);
+    Console::printDot(35, 11, YELLOW);
+    Console::printDot(40, 9, YELLOW);
+    Console::printDot(41, 10, YELLOW);
+    Console::printDot(40, 12, YELLOW);
+    Console::printDot(41, 13, YELLOW);
+    Console::printDot(41, 14, YELLOW);
+    Console::printDot(40, 15, YELLOW);
+    Console::printDot(35, 14, YELLOW);
+
+    //?
+    for (int i = 50; i < 55; i++)
+        Console::printDot(i, 15, LIGHTGRAY);
+    Console::printDot(49, 16, LIGHTGRAY);
+    Console::printDot(55, 16, LIGHTGRAY);
+    Console::printDot(55, 17, LIGHTGRAY);
+    Console::printDot(54, 18, LIGHTGRAY);
+    Console::printDot(53, 19, LIGHTGRAY);
+    Console::printDot(52, 20, LIGHTGRAY);
+    Console::printDot(52, 22, LIGHTGRAY);
+
+    Console::gotoEnd();
+}
 
 //결과화면 - 이김
 void Page::minigame3() {
@@ -1886,21 +1961,7 @@ void Page::minigame3() {
     }
     Console::gotoXY(20, 11);
     Console::setBackground(MAGENTA);
-    Console::printColorString("당신은 대결에서 이겼습니다.", LIGHTGRAY);
-    Console::gotoXY(19, 13);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("그에 따라 보상을 받게 됩니다.", LIGHTGRAY);
-
-    // reward box
-    for (int i = 18; i < 49; i++) {
-        Console::printDot(i, 15, LIGHTRED);
-        for (int j = 16; j < 22; j++) {
-            Console::printDot(i, j, LIGHTGRAY);
-        }
-    }
-    Console::gotoXY(30, 15);
-    Console::setBackground(LIGHTRED);
-    Console::printColorString("REWARD", LIGHTGRAY);
+    Console::printColorString("당신은 게임에서 이겼습니다.");
 
     Console::gotoEnd();
 }
@@ -1970,29 +2031,209 @@ void Page::minigame4() {
         Console::printDot(i, 7, BLUE);
     }
 
+    Console::gotoEnd();
+}
+
+void Page::minigame5() {
+    frame();
+
+    // Y
+    for (int j = 5; j < 8; j++)
+        Console::printDot(7, j, LIGHTMAGENTA);
+    Console::printDot(6, 4, LIGHTMAGENTA);
+    Console::printDot(8, 4, LIGHTMAGENTA);
+    Console::printDot(5, 3, LIGHTMAGENTA);
+    Console::printDot(9, 3, LIGHTMAGENTA);
+
+    // O
+    for (int i = 12; i < 15; i++) {
+        Console::printDot(i, 3, MAGENTA);
+        Console::printDot(i, 7, MAGENTA);
+    }
+    for (int j = 4; j < 7; j++) {
+        Console::printDot(11, j, MAGENTA);
+        Console::printDot(15, j, MAGENTA);
+    }
+
+    // U
+    for (int i = 18; i < 21; i++)
+        Console::printDot(i, 7, LIGHTMAGENTA);
+    for (int j = 3; j < 7; j++) {
+        Console::printDot(17, j, LIGHTMAGENTA);
+        Console::printDot(21, j, LIGHTMAGENTA);
+    }
+
+    // S
+    for (int i = 39; i < 44; i++) {
+        Console::printDot(i, 3, YELLOW);
+        Console::printDot(i, 5, YELLOW);
+        Console::printDot(i, 7, YELLOW);
+    }
+    Console::printDot(39, 4, YELLOW);
+    Console::printDot(43, 6, YELLOW);
+
+    // A
+    for (int i = 46; i < 49; i++) {
+        Console::printDot(i, 3, YELLOW);
+        Console::printDot(i, 5, YELLOW);
+    }
+    for (int j = 4; j < 8; j++) {
+        Console::printDot(45, j, YELLOW);
+        Console::printDot(49, j, YELLOW);
+    }
+
+    // M
+    for (int j = 3; j < 8; j++) {
+        Console::printDot(51, j, YELLOW);
+        Console::printDot(55, j, YELLOW);
+    }
+    Console::printDot(52, 4, YELLOW);
+    Console::printDot(53, 5, YELLOW);
+    Console::printDot(54, 4, YELLOW);
+
+    // E
+    for (int j = 3; j < 8; j++)
+        Console::printDot(57, j, YELLOW);
+
+    for (int i = 58; i < 62; i++) {
+        Console::printDot(i, 3, YELLOW);
+        Console::printDot(i, 5, YELLOW);
+        Console::printDot(i, 7, YELLOW);
+    }
+
     // result box
     for (int i = 5; i < 62; i++) {
         for (int j = 9; j < 24; j++) {
             Console::printDot(i, j, MAGENTA);
         }
     }
-    Console::gotoXY(21, 11);
+    Console::gotoXY(20, 11);
     Console::setBackground(MAGENTA);
-    Console::printColorString("당신은 대결에서 졌습니다.", LIGHTGRAY);
-    Console::gotoXY(18, 13);
+    Console::printColorString("당신은 게임에서 비겼습니다.");
+    Console::gotoXY(20, 13);
     Console::setBackground(MAGENTA);
-    Console::printColorString("그에 따라 패널티를 받게 됩니다.", LIGHTGRAY);
+    Console::printColorString("배팅 금액의 모두를 잃습니다.");
 
-    // penalty box
+    // reward box
     for (int i = 18; i < 49; i++) {
-        Console::printDot(i, 15, BLUE);
+        Console::printDot(i, 15, YELLOW);
         for (int j = 16; j < 22; j++) {
             Console::printDot(i, j, LIGHTGRAY);
         }
     }
     Console::gotoXY(30, 15);
-    Console::setBackground(BLUE);
-    Console::printColorString("PENALTY", LIGHTGRAY);
+    Console::setBackground(YELLOW);
+    Console::printColorString("PENALTY");
+    Console::gotoXY(24, 17);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("잃은 금액 :", YELLOW);
+    Console::gotoXY(24, 19);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("현재 잔고 :", YELLOW);
+
+    Console::gotoEnd();
+}
+
+//알바 끝난후
+void Page::finish() {
+    frame();
+
+    // T
+    for (int i = 5; i < 10; i++)
+        Console::printDot(i, 3, LIGHTBLUE);
+    for (int j = 4; j < 8; j++)
+        Console::printDot(7, j, LIGHTBLUE);
+
+    // O
+    for (int i = 12; i < 15; i++) {
+        Console::printDot(i, 3, LIGHTBLUE);
+        Console::printDot(i, 7, LIGHTBLUE);
+    }
+    for (int j = 4; j < 7; j++) {
+        Console::printDot(11, j, LIGHTBLUE);
+        Console::printDot(15, j, LIGHTBLUE);
+    }
+
+    // D
+    for (int i = 17; i < 21; i++) {
+        Console::printDot(i, 3, LIGHTBLUE);
+        Console::printDot(i, 7, LIGHTBLUE);
+    }
+    for (int j = 4; j < 7; j++)
+        Console::printDot(17, j, LIGHTBLUE);
+    for (int j = 4; j < 7; j++)
+        Console::printDot(21, j, LIGHTBLUE);
+
+    // A
+    for (int i = 24; i < 27; i++) {
+        Console::printDot(i, 3, LIGHTBLUE);
+        Console::printDot(i, 5, LIGHTBLUE);
+    }
+    for (int j = 4; j < 8; j++) {
+        Console::printDot(23, j, LIGHTBLUE);
+        Console::printDot(27, j, LIGHTBLUE);
+    }
+
+    // Y
+    for (int j = 5; j < 8; j++)
+        Console::printDot(31, j, LIGHTBLUE);
+    Console::printDot(30, 4, LIGHTBLUE);
+    Console::printDot(32, 4, LIGHTBLUE);
+    Console::printDot(29, 3, LIGHTBLUE);
+    Console::printDot(33, 3, LIGHTBLUE);
+
+    // today box
+    for (int i = 5; i < 62; i++) {
+        for (int j = 9; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
+    //목록
+    Console::gotoXY(8, 11);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("판매량", LIGHTRED);
+    Console::gotoXY(8, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("실패한 잔 수", LIGHTYELLOW);
+    Console::gotoXY(8, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("누적 판매량", LIGHTGREEN);
+    Console::gotoXY(8, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("오늘의 수익", LIGHTBLUE);
+    Console::gotoXY(8, 19);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("현제 보유 금액", LIGHTMAGENTA);
+    Console::gotoXY(35, 11);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("현재 레벨", LIGHTCYAN);
+    Console::gotoXY(35, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("획득 경험치", LIGHTGRAY);
+
+    // COFFEE
+    for (int i = 47; i < 54; i++) {
+        Console::printDot(i, 16, LIGHTGRAY);
+        Console::printDot(i, 17, BLACK);
+        for (int j = 18; j < 23; j++) {
+            Console::printDot(i, j, LIGHTGRAY);
+        }
+    }
+    for (int j = 17; j < 22; j++) {
+        Console::printDot(46, j, LIGHTGRAY);
+        Console::printDot(54, j, LIGHTGRAY);
+    }
+    for (int i = 55; i < 58; i++) {
+        Console::printDot(i, 18, LIGHTGRAY);
+        Console::printDot(i, 20, LIGHTGRAY);
+    }
+    Console::printDot(57, 19, LIGHTGRAY);
+    Console::printDot(46, 16, LIGHTGRAY);
+    Console::printDot(54, 16, LIGHTGRAY);
+
+    Console::gotoXY(33, 22);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("Cafe Tycoon", LIGHTGRAY);
 
     Console::gotoEnd();
 }
