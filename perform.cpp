@@ -25,10 +25,10 @@ void gameOver(int signum) {
     exit(0);
 }
 
-int Game::lastTime = 100;
+int Game::lastTime = TIME;
 
 void *showTime(void *) {
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < TIME; i++) {
         sleep(1);
         Game::lastTime--;
     }
@@ -38,8 +38,8 @@ void Game::start(User &user) {
     int pid; // 첫 번쨰 pid
     key_t key;
     int id;
-    int *shmaddr = NULL; // 0:금액, 1:잔수, 2:경험치
-    lastTime = 100;
+    int *shmaddr = NULL; // 0:금액, 1:잔수, 2:경험치 3:실패, 4:성공
+    lastTime = TIME;
 
     string checkShowRecipe;
 
@@ -51,13 +51,6 @@ void Game::start(User &user) {
         perror("fork() error!");
         return;
     } else if (pid == 0) {
-        //게임 종료 후 데이터 저장
-        shmaddr = (int *)shmat(id, NULL, SHM_RDONLY);
-        waitpid(pid, NULL, 0);
-        user.addMoney(shmaddr[0]);
-        user.addCountsell(shmaddr[1]);
-        user.addEx(shmaddr[2]);
-    } else {
         // 데이터 통신
         shmaddr = (int *)shmat(id, NULL, 0);
         memset(shmaddr, 0, sizeof(shmaddr));
@@ -67,6 +60,8 @@ void Game::start(User &user) {
         int kind;             // 커피 종류
         int showSelectY = 10;
         int color;
+        int x;
+        int y;
 
         vector<string> coffeeName = {"아메리카노", "카페라뗴",
                                      "홍차",       "카페모카",
@@ -92,7 +87,6 @@ void Game::start(User &user) {
         const double failPercnt = 0.8;
 
         map<int, int>::iterator iter;
-        map<int, int>::iterator c_end;
 
         int selectIngerdients; //선택한 커피 재료 모음
         int select;            // 선택한 재료 저장
@@ -107,18 +101,21 @@ void Game::start(User &user) {
         int tempPrice;          // 공유 메모리에 저장할 데이터
         int tempSell;           // 공유 메모리에 저장할 금액
         int tempEx;             // 공유 메모리에 저장할 경험치
+        int failCount = 0;
+        int succesCount = 0;
+        int typeNum = 2;
 
         char ch; // 키보드 입력
 
         //난수 생성
         random_device rd;
         mt19937 gen(rd());
-        uniform_int_distribution<int> randNumberOfType(1, 2);   // 종류 개수
+        uniform_int_distribution<int> randNumberOfType(1, typeNum); // 종류 개수
         uniform_int_distribution<int> randQuantity(1, 5);       // 주문 개수
         uniform_int_distribution<int> randKindOfType(0, level); //커피 종류
 
         //타이머 설정
-        // alarm(100);
+        alarm(TIME);
 
         // 시간 보여주기
         pthread_t tid = 0;
@@ -133,33 +130,57 @@ void Game::start(User &user) {
         }
 
         while (1) {
+            orderd.clear();
+            totalCup = 0;
 
             numberOfType = randNumberOfType(gen);
 
             // 메뉴 주문
-            for (int i = 0; i < numberOfType; i++) {
+            for (int i = 0; i < numberOfType;) {
+
                 kind = randKindOfType(gen);
-                c_end = orderd.end();
-                if (user.getRecipe(kind) && orderd.find(kind) == c_end) {
+
+                if (user.getRecipe(kind) && orderd[kind] == 0) {
                     orderd[kind] = randQuantity(gen);
                     totalCup += orderd[kind];
-                } else {
-                    i--;
+                    i++;
                 }
             }
 
             color = LIGHTGRAY;
             //주문 정보 출력
-            if (lastTime > 50) {
+            if (lastTime > lastTime / 2) {
                 page.workingPage1_day(orderd);
             } else {
                 page.workingPage1_night(orderd);
             }
 
-            // ------ 디자인 변경 필요 -----
             //레시피 출력 여부
             page.showRecipeButton();
-            cin >> checkShowRecipe;
+            x = 20;
+            y = HEIGHT - 1;
+            Console::gotoXY(x, y);
+            Console::setBackground(LIGHTYELLOW);
+            Console::printColorString(">", RED);
+            while (1) { // 방향키 입력
+                ch = Console::linux_getch();
+                if (ch == ENTER) {
+                    if (x == 20)
+                        checkShowRecipe = "y";
+                    break;
+                } else {
+                    Console::linux_getch();
+                    ch = Console::linux_getch();
+                    if (ch == 'C') {
+                        // RIGHT
+                        x = 26;
+                    } else if (ch == 'D') {
+                        // LEFT
+                        x = 20;
+                    }
+                    Console::drawCursor(x, y, RED, LIGHTYELLOW);
+                }
+            }
 
             if (checkShowRecipe == "y") {
                 // ------ 디자인 변경 필요 -----
@@ -168,7 +189,8 @@ void Game::start(User &user) {
 
                 //레시피 출력
                 for (iter = orderd.begin(); iter != orderd.end(); iter++) {
-                    Console::gotoXY(7, tempY++);
+                    Console::gotoXY(7, tempY);
+                    tempY += 2;
                     switch (iter->first) {
                     case 0:
                         Console::setBackground(LIGHTGRAY);
@@ -204,24 +226,20 @@ void Game::start(User &user) {
                         break;
                     }
                 }
-                sleep(10); //보여주는 시간
-            }
 
-            // ------ 디자인 변경 필요 -----
-            // 재료 선택을 위해 재료 보여주기
-            for (vector<string> v : ingerdients) {
-                for (string item : v) {
-                    cout << item << " ";
-                }
-                cout << endl;
+                Console::gotoXY(53, HEIGHT - 2);
+                Console::setBackground(LIGHTGRAY);
+                Console::printColorString(">", RED);
+                while (Console::linux_getch() != ENTER)
+                    ;
             }
 
             page.makingDrink(orderd, level);
-            Console::linux_getch(); //입력 버퍼에 남아있는 엔터키 제거
+
             //배열 초기화
 
-            int x = 4;
-            int y = 12;
+            x = 4;
+            y = 12;
             int drinkingCount = 0;
             int syrupLevel = (level > 4) ? 4 : level;
             select = 1;
@@ -253,10 +271,10 @@ void Game::start(User &user) {
                         // 키보드 입력
                         while (1) { // 방향키 입력
                             ch = Console::linux_getch();
-                            if (ch == ENTER) {
+                            if (ch == SPACE) {
                                 ch = 'y';
                                 break;
-                            } else if (ch == SPACE) {
+                            } else if (ch == ENTER) {
                                 break;
                             } else {
                                 Console::linux_getch();
@@ -267,7 +285,7 @@ void Game::start(User &user) {
                                         //재료 라인
                                         y -= 2;
                                         if (x == 4)
-                                            select -= 2;
+                                            select -= 1;
                                         if (x == 14)
                                             select -= 20;
                                         if (x == 25)
@@ -281,7 +299,7 @@ void Game::start(User &user) {
                                     if (x == 4 && y < 16) {
                                         //재료 라인
                                         y += 2;
-                                        select += 2;
+                                        select += 1;
                                         Console::drawCursor(x, y, RED, color);
                                     } else if (x == 14 &&
                                                y < 14 + (level / 3) * 2) {
@@ -306,7 +324,20 @@ void Game::start(User &user) {
                                     if (x == 4) {
                                         //샷 라인
                                         x = 14;
-                                        select *= 10;
+                                        switch (select) {
+                                        case 1:
+                                            select = 10;
+                                            break;
+                                        case 2:
+                                            select = 30;
+                                            break;
+                                        case 3:
+                                            select = 50;
+                                            break;
+                                        default:
+                                            break;
+                                        }
+
                                         Console::drawCursor(x, y, RED, color);
                                     } else if (x == 14) {
                                         //베이스 라인
@@ -323,7 +354,19 @@ void Game::start(User &user) {
                                     if (x == 14) {
                                         //샷 라인
                                         x = 4;
-                                        select /= 10;
+                                        switch (select) {
+                                        case 10:
+                                            select = 1;
+                                            break;
+                                        case 30:
+                                            select = 2;
+                                            break;
+                                        case 50:
+                                            select = 3;
+                                            break;
+                                        default:
+                                            break;
+                                        }
                                         Console::drawCursor(x, y, RED, color);
                                     } else if (x == 25) {
                                         //베이스 라인
@@ -341,6 +384,9 @@ void Game::start(User &user) {
                         }
 
                         if (ch == 'y') {
+                            //좌표 초기화
+                            x = 4;
+                            y = 12;
                             //커서 지우기
                             Console::drawCursor(x, y, RED, color);
 
@@ -358,9 +404,6 @@ void Game::start(User &user) {
                             //선택된 재료 초기화
                             showSelectY = 10;
                             select = 1;
-                            //좌표 초기화
-                            x = 4;
-                            y = 12;
 
                             //커피만들기
                             makeCoffee[i][j] = selectIngerdients;
@@ -426,17 +469,20 @@ void Game::start(User &user) {
                  i++, iter++) {
 
                 for (int j = 0; j < iter->second; j++) {
+
                     if (recipe[iter->first] != makeCoffee[i][j]) {
                         successOrfail = false;
                         totalPrice += coffeePrice[iter->first] * failPercnt;
+                        failCount++;
                     } else {
                         totalPrice += coffeePrice[iter->first];
                         totalEx += ex[iter->first];
+                        succesCount++;
                     }
                 }
             }
 
-            if (lastTime > 50) {
+            if (lastTime > lastTime / 2) {
                 (successOrfail) ? page.workingPage3_day()
                                 : page.workingPage4_day();
             } else {
@@ -447,16 +493,52 @@ void Game::start(User &user) {
                 if (Console::linux_getch() == ENTER)
                     break;
             }
-            //-----------test--------
-            cout << "totalPrice : " << totalPrice
-                 << ", countSell : " << totalCup << endl;
+
             tempPrice = shmaddr[0] + totalPrice;
             tempSell = shmaddr[1] + totalCup;
             tempEx = shmaddr[2] + totalEx;
             memcpy(&shmaddr[0], &tempPrice, sizeof(int));
             memcpy(&shmaddr[1], &tempSell, sizeof(int));
-            memcpy(&shmaddr[2], &totalEx, sizeof(int));
+            memcpy(&shmaddr[2], &tempEx, sizeof(int));
+            memcpy(&shmaddr[3], &failCount, sizeof(int));
+            memcpy(&shmaddr[4], &succesCount, sizeof(int));
         }
+    } else {
+        //게임 종료 후 데이터 저장
+        shmaddr = (int *)shmat(id, NULL, SHM_RDONLY);
+        wait(NULL);
+        user.addMoney(shmaddr[0]);
+        user.addCountsell(shmaddr[1]);
+        user.addEx(shmaddr[2]);
+
+        page.finish();
+        //값
+        Console::gotoXY(24, 11);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(shmaddr[1]).c_str(), LIGHTGRAY);
+        Console::gotoXY(24, 13);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(shmaddr[3]).c_str(), LIGHTGRAY);
+        Console::gotoXY(24, 15);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(user.getCountsell()).c_str(),
+                                  LIGHTGRAY);
+        Console::gotoXY(24, 17);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(shmaddr[0]).c_str(), LIGHTGRAY);
+        Console::gotoXY(24, 19);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(user.getMoney()).c_str(),
+                                  LIGHTGRAY);
+        Console::gotoXY(52, 11);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(user.getlevel()).c_str(),
+                                  LIGHTGRAY);
+        Console::gotoXY(52, 13);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(shmaddr[2]).c_str(), LIGHTGRAY);
+        while (Console::linux_getch() != ENTER)
+            ;
     }
     // 게임 종료 정보 출력
     shmdt(shmaddr);
@@ -474,7 +556,7 @@ int Store::printItem(User &user) {
 
     Console::gotoXY(15, 11);
     Console::setBackground(LIGHTGRAY);
-    if (user.getRecipe(2) == 0) { //구매기록없음
+    if (!user.getRecipe(2)) { //구매기록없음
         if (user.getlevel() >= level[0]) {
             Console::printColorString("         1. 홍차             33000",
                                       CYAN);
@@ -488,12 +570,12 @@ int Store::printItem(User &user) {
 
     Console::gotoXY(15, 13);
     Console::setBackground(LIGHTGRAY);
-    if (user.getRecipe(3) == 0) { //구매기록없음
+    if (!user.getRecipe(3)) { //구매기록없음
         if (user.getlevel() >= level[1]) {
             Console::printColorString("         2. 레몬 에이드      55000",
                                       YELLOW);
         } else {
-            Console::printColorString(" [Locked] 2. 레몬 에이드      55000",
+            Console::printColorString("[Locked] 2. 레몬 에이드      55000",
                                       YELLOW);
         }
     } else { // 구매기록 있음
@@ -502,7 +584,7 @@ int Store::printItem(User &user) {
 
     Console::gotoXY(15, 15);
     Console::setBackground(LIGHTGRAY);
-    if (user.getRecipe(4) == 0) { //구매기록없음
+    if (!user.getRecipe(4)) { //구매기록없음
         if (user.getlevel() >= level[2]) {
             Console::printColorString("        3. 카페모카          77000",
                                       LIGHTRED);
@@ -517,7 +599,7 @@ int Store::printItem(User &user) {
 
     Console::gotoXY(15, 17);
     Console::setBackground(LIGHTGRAY);
-    if (user.getRecipe(5) == 0) { //구매기록없음
+    if (!user.getRecipe(5)) { //구매기록없음
         if (user.getlevel() >= level[3]) {
             Console::printColorString("         4. 카라멜 마끼야또  99000",
                                       GREEN);
@@ -570,7 +652,8 @@ int Store::buyItem(User &user) {
         Console::setBackground(LIGHTGRAY);
         switch (y) {
         case 11:
-            if (user.getlevel() >= level[0] && user.getMoney() >= cost[0]) {
+            if (user.getlevel() >= level[0] && user.getMoney() >= cost[0] &&
+                user.getRecipe(0)) {
                 Console::gotoXY(17, 19);
                 string temp =
                     "잔액에서" + to_string(cost[0]) + "원이 차감됩니다.";
@@ -587,6 +670,7 @@ int Store::buyItem(User &user) {
                 if (ch == ENTER) {
                     ch = 'y';
                     user.addMoney(-cost[0]);
+                    user.addRecipe(2);
                 } else if (ch == ESC)
                     break;
             } else {
@@ -598,7 +682,8 @@ int Store::buyItem(User &user) {
             }
             break;
         case 13:
-            if (user.getlevel() >= level[1] && user.getMoney() >= cost[1]) {
+            if (user.getlevel() >= level[1] && user.getMoney() >= cost[1] &&
+                user.getRecipe(1)) {
                 Console::gotoXY(17, 19);
                 string temp =
                     "잔액에서" + to_string(cost[1]) + "원이 차감됩니다.";
@@ -614,6 +699,7 @@ int Store::buyItem(User &user) {
                 ch = Console::linux_getch();
                 if (ch == ENTER) {
                     ch = 'y';
+                    user.addRecipe(3);
                     user.addMoney(-cost[1]);
                 } else if (ch == ESC)
                     break;
@@ -626,7 +712,8 @@ int Store::buyItem(User &user) {
             }
             break;
         case 15:
-            if (user.getlevel() >= level[2] && user.getMoney() >= cost[2]) {
+            if (user.getlevel() >= level[2] && user.getMoney() >= cost[2] &&
+                user.getRecipe(2)) {
                 Console::gotoXY(17, 19);
                 string temp =
                     "잔액에서" + to_string(cost[2]) + "원이 차감됩니다.";
@@ -642,6 +729,7 @@ int Store::buyItem(User &user) {
                 ch = Console::linux_getch();
                 if (ch == ENTER) {
                     ch = 'y';
+                    user.addRecipe(4);
                     user.addMoney(-cost[2]);
                 } else if (ch == ESC)
                     break;
@@ -654,7 +742,8 @@ int Store::buyItem(User &user) {
             }
             break;
         case 17:
-            if (user.getlevel() >= level[3] && user.getMoney() >= cost[3]) {
+            if (user.getlevel() >= level[3] && user.getMoney() >= cost[3] &&
+                user.getRecipe(3)) {
                 Console::gotoXY(17, 19);
                 string temp =
                     "잔액에서" + to_string(cost[3]) + "원이 차감됩니다.";
@@ -670,6 +759,7 @@ int Store::buyItem(User &user) {
                 ch = Console::linux_getch();
                 if (ch == ENTER) {
                     ch = 'y';
+                    user.addRecipe(5);
                     user.addMoney(-cost[3]);
                 } else if (ch == ESC)
                     break;
@@ -700,129 +790,397 @@ int Store::buyItem(User &user) {
     return 0;
 }
 
-Minigame::Minigame() { wantGame(); }
-//미니게임 UI 출력
+Minigame::Minigame(Page &_page) { page = _page; }
 
 // 그럼 나는 선택해야할 거야
 int Minigame::wantGame() {
-    string input;
+
+    page.minigame1();
 
     while (1) {
-        cout << "가위바위보가 열리는 미니게임장입니다. 게임을 "
-                "진행하시겠습니까?(y/n)"
-             << endl;
-        cout << "시작하려면 y, 메뉴로 돌아가시려면 n을 입력하세요" << endl;
-        cin >> input;
-
-        if (input == "y") {
-            //이거 그냥 내가 보고면서 하고자 써둠 ! 이런 프로세스를 생각하면서
-            //했음
-            cout << "미니게임에 오신 것을 환영합니다." << endl;
-            cout
-                << "본 미니게임은 가위바위보의 승패 여부에 따라 돈을 늘릴수도, "
-                   "잃을 수도 있습니다. "
-                << endl;
-            cout << "가위바위보에서 이길 시, 배팅한 금액의 1.0~2.0배의 돈을 "
-                    "받을 "
-                    "수 있습니다. "
-                 << endl;
-            cout << "그러나 가위바위보에서 졌을 경우 배팅한 금액을 모두 "
-                    "잃게됩니다."
-                 << endl;
-            wantBatting();
-            break;
-        } else if (input == "n") {
-            break;
-        } else {
-            cout << "잘못된 입력입니다. 다시 시도하세요" << endl;
+        for (int i = 5; i < 62; i++) {
+            for (int j = 11; j < 24; j++) {
+                Console::printDot(i, j, MAGENTA);
+            }
         }
+
+        Console::gotoXY(20, 9);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(" ▶ DO YOU WANNT START? ◀  ", LIGHTGRAY);
+
+        Console::gotoXY(15, 15);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("가위바위보가 열리는 미니게임장입니다.");
+        Console::gotoXY(20, 17);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("게임을 진행하시겠습니까? (y/n)");
+        Console::gotoXY(24, 19);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("입력 : ");
+        Console::gotoXY(34, 19);
+
+        Console::setBackground(MAGENTA);
+        string temp = Console::input(0, 1);
+        if (temp == "n")
+            return 0;
+        else if (temp == "y")
+            break;
     }
-    return 0;
+    return 1;
 }
 
-int Minigame::wantBatting() {
+int Minigame::wantBatting(User &user) {
     string input;
+    int money;
+
+    for (int i = 5; i < 62; i++) {
+        for (int j = 11; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
+
+    Console::gotoXY(21, 9);
+    Console::setBackground(MAGENTA);
+    Console::printColorString(" ▶ READY FOR THE GAME ◀  ", LIGHTGRAY);
+
+    Console::gotoXY(17, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("미니게임에 오신 것을 환영합니다.");
+    Console::gotoXY(10, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("게임에서 이길 시, 배팅 금액의 1.5~2.0배를 받고");
+    Console::gotoXY(12, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("게임에서 질 시, 배팅 금액을 모두 잃습니다.");
+    Console::gotoXY(14, 19);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("(ENTER 입력 시 다음 화면으로 이동합니다.)");
+    Console::gotoXY(31, 21);
+    while (Console::linux_getch() != ENTER)
+        ;
 
     while (1) {
-        cout << "얼마를 배팅하시겠습니까? 자신이 소유한 잔고 내에서만 "
-                "가능합니다. "
-             << endl;
-        cout << "( 현재 소유 금액 :" << user_money << "원 )" << endl;
-        cin >> gamble_money;
+        for (int i = 5; i < 62; i++) {
+            for (int j = 11; j < 24; j++) {
+                Console::printDot(i, j, MAGENTA);
+            }
+        }
 
-        cout << "배팅하고자 하는 금액이 " << gamble_money << "원 이 맞습니까?"
-             << endl;
-        cin >> input;
+        Console::gotoXY(21, 9);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(" ▶ READY FOR THE GAME ◀  ", LIGHTGRAY);
 
-        if (input == "y") {
-            cout << "게임을 시작합니다." << endl;
+        Console::gotoXY(15, 13);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("얼마를 배팅하시겠습니까?");
+        Console::gotoXY(15, 15);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("현재 소유 금액 : ");
+        Console::setBackground(MAGENTA);
+        Console::printColorString(to_string(user.getMoney()).c_str(), BLACK);
+
+        Console::gotoXY(15, 17);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("배팅 금액 입력 : ");
+        Console::setBackground(MAGENTA);
+        input = Console::input(3);
+        money = stoi(input);
+
+        if (money > user.getMoney()) {
+            Console::gotoXY(25, 21);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("잘못된 금액입니다.");
+            Console::gotoXY(25, 23);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("다시 입력합니다.");
+            while (Console::linux_getch() != ENTER)
+                ;
+        } else {
             break;
         }
-        if (input == "n") {
-            cout << "다시 입력합니다." << endl;
-        } else {
-            cout << "잘못된 입력입니다. 다시 시도하세요" << endl;
-        }
     }
-    startGame();
-    return 0;
+    while (1) {
+        Console::gotoXY(11, 20);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(
+            "(n 입력시 미니 게임 처음 화면으로 돌아갑니다)");
+
+        Console::gotoXY(15, 19);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("배팅을 진행하겠습니까?(y/n) : ");
+
+        Console::setBackground(MAGENTA);
+        input = Console::input(0, 1);
+        if (input == "n")
+            return -1;
+
+        Console::gotoXY(20, 23);
+        Console::setBackground(MAGENTA);
+        Console::printColorString(" ▶ 게임을 시작합니다. ◀  ");
+        while (Console::linux_getch() != ENTER)
+            ;
+        break;
+    }
+    gamebleMoney = money;
+
+    return money;
 }
 
-int Minigame::startGame() {
-    static unsigned int seed = 9876;
-    int random_num = (rand() % 20) / 10;
-    int com_num = (rand() % 3) + 1;
+int Minigame::startGame(User &user) {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> com(1, 3);
+    string input;
+    int userNum;
+
+    int comNum = com(gen);
+
+    Console::gotoXY(11, 9);
+    Console::setBackground(LIGHTRED);
 
     // 사용자는 어떤걸 낼까
-    int input;
-    cout << "가위바위보 게임을 진행합니다. " << endl;
-    cout << "1. 가위/ 2. 바위/ 3. 보 중에 선택하세요(숫자만 입력)" << endl;
-    cin >> input;
-    // 컴퓨터는 어떤걸 낼까
-    if (com_num = 1) {    // 컴퓨터 - > 가위
-        if (input == 1) { // 유저 -> 가위
-            sameGame(random_num);
-        } else if (input == 2) { // 유저 -> 바위
-            winGame(random_num);
-        } else if (input == 3) { // 유저 -> 보
-            loseGame(random_num);
-        }
-    } else if (com_num = 2) { //컴퓨터 - > 바위
-        if (input == 1) {     // 유저 -> 가위
-            loseGame(random_num);
-        } else if (input == 2) { // 유저 -> 바위
-            sameGame(random_num);
-        } else if (input == 3) { // 유저 -> 보
-            winGame(random_num);
-        }
-
-    } else if (com_num = 3) { //컴퓨터 - > 보
-        if (input == 1) {     // 유저 -> 가위
-            winGame(random_num);
-        } else if (input == 2) { // 유저 -> 바위
-            loseGame(random_num);
-        } else if (input == 3) { // 유저 -> 보
-            sameGame(random_num);
+    page.minigame2();
+    while (1) {
+        Console::gotoXY(6, 9);
+        Console::setBackground(LIGHTRED);
+        Console::printColorString("        ");
+        Console::gotoXY(6, 9);
+        Console::setBackground(LIGHTRED);
+        Console::printColorString("입력 :");
+        input = Console::input(3);
+        userNum = stoi(input);
+        if (userNum > 0 && userNum < 4) {
+            break;
         }
     }
+
+    if (comNum == 1) {      // 컴퓨터 - > 가위
+        if (userNum == 1) { // 유저 -> 가위
+            sameGame();
+        } else if (userNum == 2) { // 유저 -> 바위
+            winGame(user);
+        } else if (userNum == 3) { // 유저 -> 보
+            loseGame(user);
+        }
+    } else if (comNum == 2) { //컴퓨터 - > 바위
+        if (userNum == 1) {   // 유저 -> 가위
+            loseGame(user);
+        } else if (userNum == 2) { // 유저 -> 바위
+            sameGame();
+        } else if (userNum == 3) { // 유저 -> 보
+            winGame(user);
+        }
+    } else if (comNum == 3) { //컴퓨터 - > 보
+        if (userNum == 1) {   // 유저 -> 가위
+            winGame(user);
+        } else if (userNum == 2) { // 유저 -> 바위
+            loseGame(user);
+        } else if (userNum == 3) { // 유저 -> 보
+            sameGame();
+        }
+    }
+
+    while (Console::linux_getch() != ENTER)
+        ;
 }
 
-int Minigame::winGame(int random_num) {
-    cout << "이겼습니다." << endl;
-    cout << "게임에 배팅한 돈" << gamble_money << "원 의" << random_num
-         << "배인" << gamble_money * random_num << "원 을 받습니다.";
+int Minigame::winGame(User &user) {
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<double> per(1.5, 2.0);
+    double percent;
+    int money;
+
+    page.minigame3();
+    percent = per(gen);
+    string text = "배팅 금액의 " + to_string(percent) + " 배가 주어집니다.";
+    Console::gotoXY(18, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString(text.c_str());
+
+    // reward box
+    for (int i = 18; i < 49; i++) {
+        Console::printDot(i, 15, LIGHTRED);
+        for (int j = 16; j < 22; j++) {
+            Console::printDot(i, j, LIGHTGRAY);
+        }
+    }
+
+    money = gamebleMoney * percent;
+    user.addMoney(money);
+
+    Console::gotoXY(30, 15);
+    Console::setBackground(LIGHTRED);
+    Console::printColorString("REWARD", LIGHTGRAY);
+    Console::gotoXY(24, 17);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("받은 금액 :", LIGHTRED);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(money).c_str(), LIGHTRED);
+
+    Console::gotoXY(24, 19);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("현재 잔고 :", LIGHTRED);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getMoney()).c_str(), LIGHTRED);
 }
 
-int Minigame::sameGame(int random_num) {
-    cout << "비겼습니다." << endl;
-    cout << "게임에 배팅한 돈" << gamble_money << "원을 잃었습니다." << endl;
-    user_money -= gamble_money;
-    cout << "현재 잔고는" << user_money << "원 니다." << endl;
+int Minigame::sameGame() {}
+
+int Minigame::loseGame(User &user) {
+    // result box
+    for (int i = 5; i < 62; i++) {
+        for (int j = 9; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
+    Console::gotoXY(22, 11);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("당신은 게임에서 졌습니다.");
+    Console::gotoXY(20, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("배팅 금액의 모두를 잃습니다.");
+
+    // penalty box
+    for (int i = 18; i < 49; i++) {
+        Console::printDot(i, 15, BLUE);
+        for (int j = 16; j < 22; j++) {
+            Console::printDot(i, j, LIGHTGRAY);
+        }
+    }
+
+    user.addMoney(-gamebleMoney);
+    Console::gotoXY(30, 15);
+    Console::setBackground(BLUE);
+    Console::printColorString("PENALTY");
+    Console::gotoXY(24, 17);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("잃은 금액 :", BLUE);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(gamebleMoney).c_str(), LIGHTRED);
+
+    Console::gotoXY(24, 19);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("현재 잔고 :", BLUE);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getMoney()).c_str(), LIGHTRED);
 }
 
-int Minigame::loseGame(int random_num) {
-    cout << "졌습니다." << endl;
-    cout << "게임에 배팅한 돈" << gamble_money << "원을 잃었습니다." << endl;
-    user_money -= gamble_money;
-    cout << "현재 잔고는" << user_money << "원 입니다." << endl;
+void showMyInfo(Page &page, User &user) {
+    page.myInfo();
+
+    Console::gotoXY(9, 10);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 이름 ]          ", CYAN);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(user.getName().c_str(), CYAN);
+
+    Console::gotoXY(9, 12);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 레벨 ]          ", MAGENTA);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("Lv.", MAGENTA);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getlevel()).c_str(), MAGENTA);
+
+    Console::gotoXY(9, 14);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 성취도 ]        ", YELLOW);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getCurEx()).c_str(), YELLOW);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" Ex", YELLOW);
+
+    Console::gotoXY(9, 16);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 습득 레시피 ]   ", GREEN);
+    Console::setBackground(LIGHTGRAY);
+    if (user.getRecipe(0)) {
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("아메리카노 ", GREEN);
+    }
+
+    if (user.getRecipe(1)) {
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("카페라떼 ", GREEN);
+    }
+
+    if (user.getRecipe(2)) {
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("홍차", GREEN);
+    }
+
+    if (user.getRecipe(3)) {
+        Console::gotoXY(29, 18);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("카페모카 ", GREEN);
+    }
+
+    if (user.getRecipe(4)) {
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("레몬에이드 ", GREEN);
+    }
+
+    if (user.getRecipe(5)) {
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString("카라멜마끼아또 ", GREEN);
+    }
+
+    int y = (user.getlevel() > 2) ? 20 : 18;
+
+    Console::gotoXY(9, y);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 소유금 ]        ", LIGHTRED);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getMoney()).c_str(), LIGHTRED);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" 원", LIGHTRED);
+
+    Console::gotoXY(9, y + 2);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("- [ 판매 잔수 ]     ", GRAY);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getCountsell()).c_str(), GRAY);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(" 잔", GRAY);
+
+    if (user.getlevel() > 4) {
+        Console::printDot(48, 6, YELLOW);
+        Console::printDot(49, 6, LIGHTCYAN);
+        Console::printDot(50, 6, YELLOW);
+        Console::printDot(51, 6, LIGHTCYAN);
+        Console::printDot(52, 6, YELLOW);
+        Console::printDot(53, 6, LIGHTCYAN);
+        Console::printDot(54, 6, YELLOW);
+        Console::printDot(55, 6, LIGHTCYAN);
+        Console::printDot(56, 6, YELLOW);
+        Console::printDot(57, 6, LIGHTCYAN);
+        Console::printDot(58, 6, YELLOW);
+
+        for (int i = 48; i < 59; i++) {
+            Console::printDot(i, 5, LIGHTYELLOW);
+        }
+
+        Console::printDot(53, 4, LIGHTRED);
+        Console::printDot(48, 4, LIGHTYELLOW);
+        Console::printDot(49, 4, LIGHTYELLOW);
+        Console::printDot(50, 4, LIGHTYELLOW);
+        Console::printDot(51, 4, LIGHTYELLOW);
+        Console::printDot(52, 4, LIGHTYELLOW);
+        Console::printDot(54, 4, LIGHTYELLOW);
+        Console::printDot(55, 4, LIGHTYELLOW);
+        Console::printDot(56, 4, LIGHTYELLOW);
+        Console::printDot(57, 4, LIGHTYELLOW);
+        Console::printDot(58, 4, LIGHTYELLOW);
+
+        Console::printDot(49, 3, LIGHTYELLOW);
+        Console::printDot(52, 3, LIGHTYELLOW);
+        Console::printDot(53, 3, LIGHTYELLOW);
+        Console::printDot(54, 3, LIGHTYELLOW);
+        Console::printDot(57, 3, LIGHTYELLOW);
+
+        Console::printDot(53, 2, LIGHTYELLOW);
+    }
+    while (Console::linux_getch() != ENTER)
+        ;
 }
