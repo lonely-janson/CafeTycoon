@@ -19,7 +19,7 @@ int main() {
 
     while (1) {
         page.startPage();
-        x = 13;
+        x = 8;
         y = 22;
         Console::gotoXY(x, y);
         Console::printColorString(">", RED);
@@ -32,22 +32,46 @@ int main() {
                 ch = Console::linux_getch();
                 if (ch == 'C') {
                     // RIGHT
-                    x = 45;
+                    switch (x) {
+                    case 8:
+                        x = 29;
+                        break;
+                    case 29:
+                        x = 51;
+                        break;
+                    default:
+                        break;
+                    }
+
                 } else if (ch == 'D') {
                     // LEFT
-                    x = 13;
+                    switch (x) {
+                    case 29:
+                        x = 8;
+                        break;
+                    case 51:
+                        x = 29;
+                        break;
+                    default:
+                        break;
+                    }
                 }
                 Console::drawCursor(x, y, RED, LIGHTMAGENTA);
             }
         }
 
-        if (x == 13) {
+        if (x == 8) {
             page.login();
             if (data.signIn())
                 break;
-        } else {
+        } else if (x == 29) {
             page.signUp();
             data.signUp();
+        } else if (x == 51) {
+            page.helper1();
+            Console::linux_getch();
+            page.helper2();
+            Console::linux_getch();
         }
     }
 
