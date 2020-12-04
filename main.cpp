@@ -15,6 +15,7 @@ int main() {
     game.start(user);*/
 
     Page page;
-    page.login();
+    page.workingPage4_night();
+
     return 0;
 }
