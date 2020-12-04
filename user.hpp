@@ -20,8 +20,8 @@ class Data {
 
 class User {
   private:
-    Data data;
     string name; // temp
+    Data data;
 
     int level;     // 레벨
     int money;     // 돈
@@ -37,7 +37,6 @@ class User {
     int curEx; // 현재 성취도
 
   public:
-    User(string _name); //임시
     User(Data &_data);
     User(User &user);
     int getlevel() { return level; }
@@ -46,6 +45,8 @@ class User {
     bool getRecipe(int index) { return recipe[index]; }
     int getCurEx() { return curEx; }
     string getName() { return data.username; }
+    string getDataPath() { return data.dataPath; }
+    string getIdPath() { return data.idPath; }
 
     void addEx(int ex);           //레벨업 시 return 1, 그외 return 0
     void addMoney(int _money);    //돈 획득

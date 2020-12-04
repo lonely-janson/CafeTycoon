@@ -2,6 +2,8 @@
 #include "console.hpp"
 #include "user.hpp"
 #include <cstring>
+#include <dirent.h>
+#include <fcntl.h>
 #include <iostream>
 #include <map>
 #include <pthread.h>
@@ -12,6 +14,7 @@
 #include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -167,6 +170,8 @@ void Game::start(User &user) {
                 if (ch == ENTER) {
                     if (x == 20)
                         checkShowRecipe = "y";
+                    else
+                        checkShowRecipe = "n";
                     break;
                 } else {
                     Console::linux_getch();
@@ -956,7 +961,7 @@ int Minigame::startGame(User &user) {
 
     if (comNum == 1) {      // 컴퓨터 - > 가위
         if (userNum == 1) { // 유저 -> 가위
-            sameGame();
+            sameGame(user);
         } else if (userNum == 2) { // 유저 -> 바위
             winGame(user);
         } else if (userNum == 3) { // 유저 -> 보
@@ -966,7 +971,7 @@ int Minigame::startGame(User &user) {
         if (userNum == 1) {   // 유저 -> 가위
             loseGame(user);
         } else if (userNum == 2) { // 유저 -> 바위
-            sameGame();
+            sameGame(user);
         } else if (userNum == 3) { // 유저 -> 보
             winGame(user);
         }
@@ -976,7 +981,7 @@ int Minigame::startGame(User &user) {
         } else if (userNum == 2) { // 유저 -> 바위
             loseGame(user);
         } else if (userNum == 3) { // 유저 -> 보
-            sameGame();
+            sameGame(user);
         }
     }
 
@@ -1025,7 +1030,19 @@ int Minigame::winGame(User &user) {
     Console::printColorString(to_string(user.getMoney()).c_str(), LIGHTRED);
 }
 
-int Minigame::sameGame() {}
+int Minigame::sameGame(User &user) {
+    user.addMoney(-gamebleMoney);
+    Console::gotoXY(24, 17);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("잃은 금액 :", YELLOW);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(gamebleMoney).c_str(), LIGHTRED);
+    Console::gotoXY(24, 19);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString("현재 잔고 :", YELLOW);
+    Console::setBackground(LIGHTGRAY);
+    Console::printColorString(to_string(user.getMoney()).c_str(), LIGHTRED);
+}
 
 int Minigame::loseGame(User &user) {
     // result box
@@ -1183,4 +1200,167 @@ void showMyInfo(Page &page, User &user) {
     }
     while (Console::linux_getch() != ENTER)
         ;
+}
+
+void showRanking(Page &page, User &user) {
+    struct stat fileInfo;
+    DIR *dirp;
+    struct dirent *dirInfo;
+    int fd;
+    char temp[10];
+    ssize_t rsize;
+
+    string sell = "";
+    string lv = "";
+    string sellPath;
+    string lvPath;
+    string dataPath = user.getDataPath();
+    multimap<int, string> ranking;
+    multimap<int, string>::iterator iter;
+    int i;
+
+    close(fd);
+
+    dirp = opendir(dataPath.c_str());
+    while ((dirInfo = readdir(dirp)) != NULL) {
+        if (strcmp(dirInfo->d_name, ".") != 0 &&
+            strcmp(dirInfo->d_name, "..") != 0) {
+            sellPath = dataPath + "/" + dirInfo->d_name + "/sell.txt";
+            fd = open(sellPath.c_str(), O_RDONLY);
+
+            sell.clear();
+            do {
+                memset(temp, '\0', 10);
+                rsize = read(fd, (char *)temp, sizeof(temp));
+                sell += temp;
+            } while (rsize > 0);
+        }
+
+        ranking.insert(pair<int, string>(stoi(sell), dirInfo->d_name));
+    }
+
+    page.ranking();
+
+    iter = ranking.end()--;
+    iter--;
+    i = 1;
+    while (i < 6) {
+        lvPath = dataPath + "/" + iter->second + "/level.txt";
+        fd = open(lvPath.c_str(), O_RDONLY);
+
+        lv.clear();
+        do {
+            memset(temp, '\0', 10);
+            rsize = read(fd, (char *)temp, sizeof(temp));
+            lv += temp;
+        } while (rsize > 0);
+
+        if (i == 1) {
+            // rank 1st
+            Console::gotoXY(13, 14);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("1ST", LIGHTRED);
+
+            Console::gotoXY(25, 14);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(iter->second.c_str(), LIGHTRED);
+
+            Console::gotoXY(37, 14);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("LV.", LIGHTRED);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(lv.c_str(), LIGHTRED);
+
+            Console::gotoXY(49, 14);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(to_string(iter->first).c_str(), LIGHTRED);
+        } else if (i == 2) {
+            // rank 2nd
+            Console::gotoXY(13, 16);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("2ND", LIGHTYELLOW);
+
+            Console::gotoXY(25, 16);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(iter->second.c_str(), LIGHTYELLOW);
+
+            Console::gotoXY(37, 16);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("LV.", LIGHTYELLOW);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(lv.c_str(), LIGHTYELLOW);
+
+            Console::gotoXY(49, 16);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(to_string(iter->first).c_str(),
+                                      LIGHTYELLOW);
+        } else if (i == 3) {
+            // rank 3rd
+            Console::gotoXY(13, 18);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("3RD", LIGHTGREEN);
+
+            Console::gotoXY(25, 18);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(iter->second.c_str(), LIGHTGREEN);
+
+            Console::gotoXY(37, 18);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("LV.", LIGHTGREEN);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(lv.c_str(), LIGHTGREEN);
+
+            Console::gotoXY(49, 18);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(to_string(iter->first).c_str(),
+                                      LIGHTGREEN);
+        } else if (i == 4) {
+            // rank 4th
+            Console::gotoXY(13, 20);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("4th", LIGHTGRAY);
+
+            Console::gotoXY(25, 20);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(iter->second.c_str(), LIGHTGRAY);
+
+            Console::gotoXY(37, 20);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("LV.", LIGHTGRAY);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(lv.c_str(), LIGHTGRAY);
+
+            Console::gotoXY(49, 20);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(to_string(iter->first).c_str(),
+                                      LIGHTGRAY);
+        } else if (i == 5) {
+            // rank 5th
+            Console::gotoXY(13, 22);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("5th", LIGHTGRAY);
+
+            Console::gotoXY(25, 22);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(iter->second.c_str(), LIGHTGRAY);
+
+            Console::gotoXY(37, 22);
+            Console::setBackground(MAGENTA);
+            Console::printColorString("LV.", LIGHTGRAY);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(lv.c_str(), LIGHTGRAY);
+
+            Console::gotoXY(49, 22);
+            Console::setBackground(MAGENTA);
+            Console::printColorString(to_string(iter->first).c_str(),
+                                      LIGHTGRAY);
+        }
+
+        if (iter == ranking.begin())
+            break;
+        i++;
+        iter--;
+    }
+
+    Console::linux_getch();
 }

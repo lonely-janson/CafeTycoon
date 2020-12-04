@@ -1568,91 +1568,6 @@ void Page::ranking() {
         Console::printColorString("-", LIGHTGRAY);
     }
 
-    // rank 1st
-    Console::gotoXY(13, 14);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("1ST", LIGHTRED);
-
-    Console::gotoXY(25, 14);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("꾸꾸", LIGHTRED);
-
-    Console::gotoXY(37, 14);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("LV.6", LIGHTRED);
-
-    Console::gotoXY(49, 14);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("100", LIGHTRED);
-
-    // rank 2nd
-    Console::gotoXY(13, 16);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("2ND", LIGHTYELLOW);
-
-    Console::gotoXY(25, 16);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("끼끼", LIGHTYELLOW);
-
-    Console::gotoXY(37, 16);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("LV.5", LIGHTYELLOW);
-
-    Console::gotoXY(49, 16);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("89", LIGHTYELLOW);
-
-    // rank 3rd
-    Console::gotoXY(13, 18);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("3RD", LIGHTGREEN);
-
-    Console::gotoXY(25, 18);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("까까", LIGHTGREEN);
-
-    Console::gotoXY(37, 18);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("LV.4", LIGHTGREEN);
-
-    Console::gotoXY(49, 18);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("70", LIGHTGREEN);
-
-    // rank 4th
-    Console::gotoXY(13, 20);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("4th", LIGHTGRAY);
-
-    Console::gotoXY(25, 20);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("꼬꼬", LIGHTGRAY);
-
-    Console::gotoXY(37, 20);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("LV.3", LIGHTGRAY);
-
-    Console::gotoXY(49, 20);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("50", LIGHTGRAY);
-
-    // rank 5th
-    Console::gotoXY(13, 22);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("5th", LIGHTGRAY);
-
-    Console::gotoXY(25, 22);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("뀨뀨", LIGHTGRAY);
-
-    Console::gotoXY(37, 22);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("LV.3", LIGHTGRAY);
-
-    Console::gotoXY(49, 22);
-    Console::setBackground(MAGENTA);
-    Console::printColorString("40", LIGHTGRAY);
-
     Console::gotoEnd();
 }
 
@@ -2118,12 +2033,6 @@ void Page::minigame5() {
     Console::gotoXY(30, 15);
     Console::setBackground(YELLOW);
     Console::printColorString("PENALTY");
-    Console::gotoXY(24, 17);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("잃은 금액 :", YELLOW);
-    Console::gotoXY(24, 19);
-    Console::setBackground(LIGHTGRAY);
-    Console::printColorString("현재 잔고 :", YELLOW);
 
     Console::gotoEnd();
 }

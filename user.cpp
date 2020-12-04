@@ -308,15 +308,6 @@ bool Data::signIn() {
     return true;
 }
 
-User::User(string _name) {
-    data.username = _name;
-    level = 5; // "?? ??"
-    money = 66000;
-    countSell = 0;
-    recipe.assign(2, true);
-    curEx = 1;
-}
-
 User::User(Data &_data) {
     string levelPath = "";
     string moneyPath = "";

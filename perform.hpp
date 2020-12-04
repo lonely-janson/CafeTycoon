@@ -6,7 +6,7 @@
 #include <array>
 
 #define MAX_SIZE sizeof(int) * 5
-#define TIME 30
+#define TIME 180
 
 using namespace std;
 
@@ -49,11 +49,13 @@ class Minigame {
     int wantGame();
     int startGame(User &user);
     int wantBatting(User &user);
-    int sameGame();
+    int sameGame(User &user);
     int winGame(User &user);
     int loseGame(User &user);
 };
 
 void showMyInfo(Page &page, User &user);
+
+void showRanking(Page &page, User &user);
 
 #endif //__PERFORM_HPP__

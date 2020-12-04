@@ -127,8 +127,7 @@ int main() {
             game.start(user);
             break;
         case 34: // ranking
-            page.ranking();
-            Console::linux_getch();
+            showRanking(page, user);
             break;
         case 73: // myinfo
             showMyInfo(page, user);
