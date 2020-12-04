@@ -416,12 +416,13 @@ void User::addEx(int ex) {
 
     if (curEx >= maxEx[level]) {
 
-        char temp;
+        char temp[2];
 
         level++;
 
         fd = open(lvPath.c_str(), O_WRONLY | O_TRUNC);
-        temp = level + '0';
+        memset(temp, '\0', 2);
+        sprintf(temp, "%d", level);
         write(fd, &temp, sizeof(temp));
 
         curEx -= maxEx[level - 1];
@@ -430,6 +431,8 @@ void User::addEx(int ex) {
     }
 
     memset(strEx, '\0', sizeof(strEx));
+    memset(strEx, '\0', 4);
+    sprintf(strEx, "%d", ex);
     fd = open(exPath.c_str(), O_WRONLY | O_TRUNC);
     write(fd, strEx, strlen(strEx));
     close(fd);

@@ -456,9 +456,8 @@ void Page::mainPage() {
 
 //샷 칸 첫번째 좌표 (5,12) / 베이스 칸 첫번째 (15,12) / 시럽 칸 첫번째 (26,12) /
 //재료 칸 첫번째 (37,12) 선택된 자료 첫번째 자료 좌표 (51,10)
-void Page::makingDrink(map<int, int> &orderd, int level) {
-    if (level > 5)
-        level = 5;
+void Page::makingDrink(map<int, int> &orderd, User &user) {
+
     frame();
     int i;
 
@@ -540,24 +539,45 @@ void Page::makingDrink(map<int, int> &orderd, int level) {
         Console::printColorString(ingerdients[1][i].c_str(), MAGENTA);
     }
 
-    if (level > 3) {
+    if (user.getRecipe(3)) {
         Console::gotoXY(15, 16);
         Console::setBackground(LIGHTGRAY);
         Console::printColorString(ingerdients[1][2].c_str(), MAGENTA);
     }
 
     //시럽 재료 보이기
-    for (int i = 0; i < level - 2; i++) {
-        Console::gotoXY(26, 12 + (i * 2));
+
+    if (user.getRecipe(3)) {
+        Console::gotoXY(26, 12);
         Console::setBackground(LIGHTGRAY);
-        Console::printColorString(ingerdients[2][i].c_str(), MAGENTA);
+        Console::printColorString(ingerdients[2][0].c_str(), MAGENTA);
+    }
+    if (user.getRecipe(4)) {
+        Console::gotoXY(26, 14);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[2][1].c_str(), MAGENTA);
+    }
+    if (user.getRecipe(5)) {
+        Console::gotoXY(26, 16);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[2][2].c_str(), MAGENTA);
     }
 
     //기타 재료 보이기
-    for (int i = 0; i < level - 2; i++) {
-        Console::gotoXY(37, 12 + (i * 2));
+    if (user.getRecipe(2)) {
+        Console::gotoXY(37, 12);
         Console::setBackground(LIGHTGRAY);
-        Console::printColorString(ingerdients[3][i].c_str(), MAGENTA);
+        Console::printColorString(ingerdients[3][0].c_str(), MAGENTA);
+    }
+    if (user.getRecipe(4)) {
+        Console::gotoXY(37, 14);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[3][1].c_str(), MAGENTA);
+    }
+    if (user.getRecipe(5)) {
+        Console::gotoXY(37, 12);
+        Console::setBackground(LIGHTGRAY);
+        Console::printColorString(ingerdients[3][2].c_str(), MAGENTA);
     }
 
     //커서색 변경하기

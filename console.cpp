@@ -33,7 +33,7 @@ const char *Console::input(int mode, int maxsize) {
     if (mode != 3) {
         while (1) {
             ch[index] = Console::linux_getch();
-            if (ch[index] == BACK) {
+            if (ch[index] == BACK && index > 0) {
                 cout << "\b \b";
                 index--;
             } else if (ch[index] == ENTER) {
@@ -47,7 +47,7 @@ const char *Console::input(int mode, int maxsize) {
     } else {
         while (1) {
             ch[index] = Console::linux_getch();
-            if (ch[index] == BACK) {
+            if (ch[index] == BACK && index > 0) {
                 cout << "\b \b";
                 index--;
             } else if (ch[index] == ENTER) {

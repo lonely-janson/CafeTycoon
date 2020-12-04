@@ -2,6 +2,7 @@
 #define __PAGE_HPP__
 
 #include "console.hpp"
+#include "user.hpp"
 #include <map>
 #include <stdlib.h>
 #include <vector>
@@ -29,7 +30,7 @@ class Page {
     void signUp();
     void mainPage();
 
-    void makingDrink(map<int, int> &orderd, int level); // orderd : 주문 정보
+    void makingDrink(map<int, int> &orderd, User &user); // orderd : 주문 정보
 
     void workingPage1_day(map<int, int> &orderd);
     void workingPage2_day();

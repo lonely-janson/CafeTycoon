@@ -239,7 +239,7 @@ void Game::start(User &user) {
                     ;
             }
 
-            page.makingDrink(orderd, level);
+            page.makingDrink(orderd, user);
 
             //배열 초기화
 
@@ -577,29 +577,31 @@ int Store::printItem(User &user) {
     Console::setBackground(LIGHTGRAY);
     if (!user.getRecipe(3)) { //구매기록없음
         if (user.getlevel() >= level[1]) {
-            Console::printColorString("         2. 레몬 에이드      55000",
-                                      YELLOW);
+            Console::printColorString("        2. 카페모카          55000",
+                                      LIGHTRED);
+
         } else {
-            Console::printColorString("[Locked] 2. 레몬 에이드      55000",
-                                      YELLOW);
+            Console::printColorString("[Locked] 2. 카페모카         55000",
+                                      LIGHTRED);
         }
     } else { // 구매기록 있음
-        Console::printColorString(" [Owned] 2. 레몬 에이드      55000", YELLOW);
+
+        Console::printColorString(" [Owned] 2. 카페모카         55000",
+                                  LIGHTRED);
     }
 
     Console::gotoXY(15, 15);
     Console::setBackground(LIGHTGRAY);
     if (!user.getRecipe(4)) { //구매기록없음
         if (user.getlevel() >= level[2]) {
-            Console::printColorString("        3. 카페모카          77000",
-                                      LIGHTRED);
+            Console::printColorString("         3. 레몬 에이드      77000",
+                                      YELLOW);
         } else {
-            Console::printColorString("[Locked] 3. 카페모카         77000",
-                                      LIGHTRED);
+            Console::printColorString("[Locked] 3. 레몬 에이드      77000",
+                                      YELLOW);
         }
     } else { // 구매기록 있음
-        Console::printColorString(" [Owned] 3. 카페모카         77000",
-                                  LIGHTRED);
+        Console::printColorString(" [Owned] 3. 레몬 에이드      77000", YELLOW);
     }
 
     Console::gotoXY(15, 17);
