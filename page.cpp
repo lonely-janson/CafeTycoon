@@ -136,15 +136,21 @@ void Page::startPage() {
         Console::printDot(50, i, LIGHTGRAY);
 
     // sign up | login
-    Console::gotoXY(14, 22);
+    Console::gotoXY(9, 22);
     Console::setBackground(LIGHTMAGENTA);
     Console::printColorString("LOGIN", LIGHTGRAY);
-    Console::gotoXY(33, 22);
+    Console::gotoXY(22, 22);
     Console::setBackground(LIGHTMAGENTA);
     Console::printColorString("|", LIGHTGRAY);
-    Console::gotoXY(46, 22);
+    Console::gotoXY(30, 22);
     Console::setBackground(LIGHTMAGENTA);
     Console::printColorString("SIGN UP", LIGHTGRAY);
+    Console::gotoXY(44, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("|", LIGHTGRAY);
+    Console::gotoXY(52, 22);
+    Console::setBackground(LIGHTMAGENTA);
+    Console::printColorString("HELPER", LIGHTGRAY);
 
     Console::gotoEnd();
 }
