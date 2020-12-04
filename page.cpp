@@ -1600,6 +1600,7 @@ void Page::minigame5() {
 
 //알바 끝난후
 void Page::finish() {
+
     frame();
 
     // T
@@ -1720,6 +1721,435 @@ void Page::finish() {
     Console::gotoXY(33, 22);
     Console::setBackground(MAGENTA);
     Console::printColorString("Cafe Tycoon", LIGHTGRAY);
+
+    Console::gotoEnd();
+}
+
+//게임 설명
+void Page::helper1() {
+    frame();
+    // H
+    for (int j = 3; j < 8; j++) {
+        Console::printDot(5, j, LIGHTGREEN);
+        Console::printDot(9, j, LIGHTGREEN);
+    }
+    for (int i = 6; i < 9; i++)
+        Console::printDot(i, 5, LIGHTGREEN);
+    // E
+    for (int j = 3; j < 8; j++)
+        Console::printDot(11, j, GREEN);
+
+    for (int i = 12; i < 16; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+        Console::printDot(i, 7, GREEN);
+    }
+    // L
+    for (int j = 3; j < 8; j++)
+        Console::printDot(17, j, LIGHTGREEN);
+    for (int i = 18; i < 22; i++)
+        Console::printDot(i, 7, LIGHTGREEN);
+    // P
+    for (int i = 23; i < 28; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+    }
+    Console::printDot(23, 4, GREEN);
+    Console::printDot(27, 4, GREEN);
+    for (int j = 6; j < 8; j++)
+        Console::printDot(23, j, GREEN);
+    // E
+    for (int j = 3; j < 8; j++)
+        Console::printDot(29, j, LIGHTGREEN);
+
+    for (int i = 30; i < 34; i++) {
+        Console::printDot(i, 3, LIGHTGREEN);
+        Console::printDot(i, 5, LIGHTGREEN);
+        Console::printDot(i, 7, LIGHTGREEN);
+    }
+    // R
+    for (int i = 35; i < 39; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+    }
+    Console::printDot(35, 4, GREEN);
+    Console::printDot(39, 4, GREEN);
+    for (int j = 6; j < 8; j++) {
+        Console::printDot(35, j, GREEN);
+        Console::printDot(39, j, GREEN);
+    }
+
+    // discussion box
+    for (int i = 5; i < 62; i++) {
+        for (int j = 9; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
+
+    for (int i = 6; i < 61; i++) {
+        Console::gotoXY(i, 11);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("-");
+    }
+
+    //메인 - 빨강
+    Console::gotoXY(7, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 메인", LIGHTRED);
+
+    Console::gotoXY(6, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("게임 메인");
+
+    Console::gotoXY(6, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("페이지로");
+
+    Console::gotoXY(6, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("PLAY(알바)");
+
+    Console::gotoXY(6, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("미니게임");
+
+    Console::gotoXY(6, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("상점 랭킹");
+
+    Console::gotoXY(6, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("내 정보에");
+
+    Console::gotoXY(6, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("들어갈 수");
+
+    Console::gotoXY(6, 19);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("있습니다.");
+
+    //알바 게임 - 노랑
+    Console::gotoXY(16, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 알바하기", LIGHTYELLOW);
+
+    Console::gotoXY(17, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("180초 동안");
+
+    Console::gotoXY(17, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("습득한");
+
+    Console::gotoXY(17, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("레시피로");
+
+    Console::gotoXY(17, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("음료를");
+
+    Console::gotoXY(17, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("만들어");
+
+    Console::gotoXY(17, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("돈을 벌고");
+
+    Console::gotoXY(17, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("레벨을");
+
+    Console::gotoXY(17, 19);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("올립니다.");
+
+    //상점 - 연두
+    Console::gotoXY(29, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 상점", LIGHTGREEN);
+
+    Console::gotoXY(29, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("레벨 별");
+
+    Console::gotoXY(29, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("다양한");
+
+    Console::gotoXY(29, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("레시피를");
+
+    Console::gotoXY(29, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("소유한");
+
+    Console::gotoXY(29, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("금액으로");
+
+    Console::gotoXY(29, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("구매할 수");
+
+    Console::gotoXY(29, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("있습니다.");
+
+    //미니 게임 - 하늘
+    Console::gotoXY(38, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 미니게임", LIGHTBLUE);
+
+    Console::gotoXY(39, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("소유 금액");
+
+    Console::gotoXY(39, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("안에서");
+
+    Console::gotoXY(39, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("원하는 만큼");
+
+    Console::gotoXY(39, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("금액을");
+
+    Console::gotoXY(39, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("배팅해");
+
+    Console::gotoXY(39, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("미니게임을");
+
+    Console::gotoXY(39, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("진행합니다.");
+
+    //내 정보 - 사이언
+    Console::gotoXY(51, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 내 정보", LIGHTCYAN);
+
+    Console::gotoXY(51, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("이름 레벨");
+
+    Console::gotoXY(51, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("성취도");
+
+    Console::gotoXY(51, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("습득 레시피");
+
+    Console::gotoXY(51, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("소유금액");
+
+    Console::gotoXY(51, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("판매 잔수를");
+
+    Console::gotoXY(51, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("확인할 수");
+
+    Console::gotoXY(51, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("있습니다.");
+
+    Console::gotoEnd();
+}
+//조작키 설명
+void Page::helper2() {
+    frame();
+    // H
+    for (int j = 3; j < 8; j++) {
+        Console::printDot(5, j, LIGHTGREEN);
+        Console::printDot(9, j, LIGHTGREEN);
+    }
+    for (int i = 6; i < 9; i++)
+        Console::printDot(i, 5, LIGHTGREEN);
+    // E
+    for (int j = 3; j < 8; j++)
+        Console::printDot(11, j, GREEN);
+
+    for (int i = 12; i < 16; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+        Console::printDot(i, 7, GREEN);
+    }
+    // L
+    for (int j = 3; j < 8; j++)
+        Console::printDot(17, j, LIGHTGREEN);
+    for (int i = 18; i < 22; i++)
+        Console::printDot(i, 7, LIGHTGREEN);
+    // P
+    for (int i = 23; i < 28; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+    }
+    Console::printDot(23, 4, GREEN);
+    Console::printDot(27, 4, GREEN);
+    for (int j = 6; j < 8; j++)
+        Console::printDot(23, j, GREEN);
+    // E
+    for (int j = 3; j < 8; j++)
+        Console::printDot(29, j, LIGHTGREEN);
+
+    for (int i = 30; i < 34; i++) {
+        Console::printDot(i, 3, LIGHTGREEN);
+        Console::printDot(i, 5, LIGHTGREEN);
+        Console::printDot(i, 7, LIGHTGREEN);
+    }
+    // R
+    for (int i = 35; i < 39; i++) {
+        Console::printDot(i, 3, GREEN);
+        Console::printDot(i, 5, GREEN);
+    }
+    Console::printDot(35, 4, GREEN);
+    Console::printDot(39, 4, GREEN);
+    for (int j = 6; j < 8; j++) {
+        Console::printDot(35, j, GREEN);
+        Console::printDot(39, j, GREEN);
+    }
+
+    // discussion box
+    for (int i = 5; i < 62; i++) {
+        for (int j = 9; j < 24; j++) {
+            Console::printDot(i, j, MAGENTA);
+        }
+    }
+
+    for (int i = 6; i < 61; i++) {
+        Console::gotoXY(i, 11);
+        Console::setBackground(MAGENTA);
+        Console::printColorString("-");
+    }
+
+    //메인 - 빨강
+    Console::gotoXY(7, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 메인", LIGHTRED);
+
+    Console::gotoXY(7, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("BACK", LIGHTRED);
+
+    Console::gotoXY(7, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("뒤로가기");
+
+    Console::gotoXY(7, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("ENTER", LIGHTRED);
+
+    Console::gotoXY(7, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("선택");
+
+    Console::gotoXY(7, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("CURSOR", LIGHTRED);
+
+    Console::gotoXY(7, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("이동");
+
+    //알바 게임 - 노랑
+    Console::gotoXY(16, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 알바하기", LIGHTYELLOW);
+
+    Console::gotoXY(17, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("Enter", LIGHTYELLOW);
+
+    Console::gotoXY(17, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("창넘기기");
+
+    Console::gotoXY(17, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("재료선택창", LIGHTYELLOW);
+
+    Console::gotoXY(17, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("SPACE", LIGHTYELLOW);
+
+    Console::gotoXY(17, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("커피만들기");
+
+    Console::gotoXY(17, 18);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("ENTER", LIGHTYELLOW);
+
+    Console::gotoXY(17, 19);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("선택");
+
+    //상점 - 연두
+    Console::gotoXY(29, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 상점", LIGHTGREEN);
+
+    Console::gotoXY(30, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("CURSOR", LIGHTGREEN);
+
+    Console::gotoXY(30, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("이동");
+
+    Console::gotoXY(30, 14);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("BACK", LIGHTGREEN);
+
+    Console::gotoXY(30, 15);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("뒤로가기");
+
+    Console::gotoXY(30, 16);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("ENTER", LIGHTGREEN);
+
+    Console::gotoXY(30, 17);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("구매하기");
+
+    //미니 게임 - 하늘
+    Console::gotoXY(38, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 미니게임", LIGHTBLUE);
+
+    Console::gotoXY(40, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("ENTER", LIGHTBLUE);
+
+    Console::gotoXY(40, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("창넘기기");
+
+    //내 정보 - 사이언
+    Console::gotoXY(51, 10);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("▶ 내 정보", LIGHTCYAN);
+
+    Console::gotoXY(52, 12);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("ENTER", LIGHTCYAN);
+
+    Console::gotoXY(52, 13);
+    Console::setBackground(MAGENTA);
+    Console::printColorString("창넘기기");
 
     Console::gotoEnd();
 }

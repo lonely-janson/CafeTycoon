@@ -30,6 +30,8 @@ class Page {
     void minigame4(); //짐
     void minigame5(); //비김
     void finish();
+    void helper1();
+    void helper2(); //키 도움말
 };
 
 #endif
