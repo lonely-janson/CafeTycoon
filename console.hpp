@@ -50,7 +50,8 @@ class Console {
     static void setBackground(int color = 49); // 배경색 변경 Default : 기본색
     static void printDot(int x, int y, int color);
     static const char *
-    input(int mode = 0, int maxsize = 20); // mode 0 : 일반입력, 1 : 비밀번호
+    input(int mode = 0,
+          int maxsize = 10); // mode 0 : 일반입력, 1 : 비밀번호, 3 :  숫자만
     static void drawCursor(int _x, int _y, int color = RED,
                            int backColor = LIGHTGRAY);
 };
