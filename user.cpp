@@ -64,7 +64,6 @@ bool Data::signUp() {
         id += Console::input();
 
         if (mkdir(id.c_str(), PERMS) == -1) {
-
             Console::gotoXY(15, 14);
             Console::setBackground(LIGHTGRAY);
             Console::printColorString("You entered it incorrectly.", BLACK);

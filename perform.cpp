@@ -551,9 +551,7 @@ void Game::start(User &user) {
 }
 
 // Constructor
-Store::Store(Page &_page) {
-    page = _page; // 커서값이 있다고 생각하자
-}
+Store::Store(Page &_page) { page = _page; }
 
 //상점 품목 표시
 //커서 첫 위치 조정해야함

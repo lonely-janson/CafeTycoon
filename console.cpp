@@ -30,6 +30,7 @@ const char *Console::input(int mode, int maxsize) {
     int index = 0;
     printf("\033[%dm", BLACK);
     fflush(stdout);
+
     if (mode != 3) {
         while (1) {
             ch[index] = Console::linux_getch();

@@ -17,6 +17,8 @@ class Data {
     bool signUp(); //회원가입
     bool signIn(); //로그인
 };
+// data
+//
 
 class User {
   private:
@@ -28,7 +30,6 @@ class User {
     int countSell; // 판매 커피 수
     vector<bool> recipe = std::vector<bool>(6);
     // 보유 및 습득 가능 레시피
-    // vector의 크기는 level + 1
     // vector의 크기로 습득 가능 레시피 판단
     // 해당 인덱스의 데이터로 레시피 보유 유무 판단
     // 0 : 아메리카노, 1 : 카페라떼, 2 : 홍차, 3 : 카페모카, 4 : 레몬 에이드, 5
