@@ -823,6 +823,10 @@ void Page::workingPage3_day() {
     Console::setBackground(GRAY);
     Console::printColorString("-- 계속하려면 ENTER --");
 
+    Console::gotoXY(25, 6);
+    Console::setBackground(LIGHTBLUE);
+    Console::printColorString("감사합니다~~ㅎㅎ");
+
     Console::gotoEnd();
 }
 
@@ -919,6 +923,10 @@ void Page::workingPage4_day() {
     Console::gotoXY(18, 20);
     Console::setBackground(GRAY);
     Console::printColorString("-- 계속하려면 ENTER --");
+
+    Console::gotoXY(25, 6);
+    Console::setBackground(LIGHTBLUE);
+    Console::printColorString("잘못나왔잖아요!");
 
     Console::gotoEnd();
 }
@@ -1160,6 +1168,10 @@ void Page::workingPage3_night() {
     Console::setBackground(BLACK);
     Console::printColorString("-- 계속하려면 ENTER --");
 
+    Console::gotoXY(25, 6);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString("감사합니다~~ㅎㅎ");
+
     Console::gotoEnd();
 }
 
@@ -1256,6 +1268,10 @@ void Page::workingPage4_night() {
     Console::gotoXY(18, 20);
     Console::setBackground(BLACK);
     Console::printColorString("-- 계속하려면 ENTER --");
+
+    Console::gotoXY(25, 6);
+    Console::setBackground(LIGHTYELLOW);
+    Console::printColorString("잘못나왔잖아요!");
 
     Console::gotoEnd();
 }

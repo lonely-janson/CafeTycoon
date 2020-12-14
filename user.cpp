@@ -67,13 +67,13 @@ bool Data::signUp() {
 
             Console::gotoXY(15, 14);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("?? ???? ??????.", BLACK);
+            Console::printColorString("You entered it incorrectly.", BLACK);
             Console::gotoXY(15, 15);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("????? ENTER? ?????", BLACK);
+            Console::printColorString("Press ENTER to continue.", BLACK);
             Console::gotoXY(15, 16);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("?????? ESC? ?????.", BLACK);
+            Console::printColorString("Press ESC to cancel.", BLACK);
             while (1) {
                 ch = Console::linux_getch();
                 if (ch == ENTER) {
@@ -157,20 +157,19 @@ bool Data::signUp() {
         Console::gotoXY(31, 17);
         Console::setBackground(LIGHTGRAY);
         checkPw = Console::input(1);
-        checkPw = temp;
-
+        pw = temp;
         if (checkPw == pw)
             break;
         else {
             Console::gotoXY(15, 16);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("?? ???????", BLACK);
+            Console::printColorString("You entered it incorrectly.", BLACK);
             Console::gotoXY(15, 17);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("????? ENTER? ?????", BLACK);
+            Console::printColorString("Press ENTER to continue.", BLACK);
             Console::gotoXY(15, 18);
             Console::setBackground(LIGHTGRAY);
-            Console::printColorString("?????? ESC? ?????.", BLACK);
+            Console::printColorString("Press ESC to cancel.", BLACK);
             while (1) {
                 ch = Console::linux_getch();
                 if (ch == ENTER) {
